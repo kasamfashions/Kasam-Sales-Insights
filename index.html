@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kasam Sales Dashboard</title>
+<link rel="icon" type="image/png" href="https://www.dropbox.com/scl/fi/j7zs9pynfexa3z0w6y1q0/Kasam-Insights.png?rlkey=xawskoglatbpcfqbsjawecdcc&st=3mrsbn7i&raw=1">
+<link rel="shortcut icon" type="image/png" href="https://www.dropbox.com/scl/fi/j7zs9pynfexa3z0w6y1q0/Kasam-Insights.png?rlkey=xawskoglatbpcfqbsjawecdcc&st=3mrsbn7i&raw=1"> 
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<style>
+  body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+  .kpi-card { transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+  .kpi-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+  
+  .total-row {
+    font-weight: 700;
+    color: #0d47a1; /* Darker blue text for emphasis */
+  }
+  .total-row > td {
+    background-color: #e0f2fe;
+  }
+  #data-table-head th {
+    background-color: #f9fafb; /* This is Tailwind's bg-gray-50 */
+  }
+</style>
+</head>
+<body class="antialiased text-slate-700">
+
+<div id="login-section" class="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <img class="mx-auto h-40 w-auto" src="https://www.dropbox.com/scl/fi/vmprhd0i0781yytkkukfg/Untitled-Kasam-Sales-Insights.png?rlkey=hazshd3m3mkftjssizqfzpmw3&st=f00pivkz&raw=1" alt="Kasam Fashions">
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Sign in to your account
+        </h2>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">
+                        Email 
+                    </label>
+                    <div class="mt-1">
+                        <input id="email" name="email" type="email" autocomplete="email" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                </div>
+
+                <div>
+  <label for="password" class="block text-sm font-medium text-gray-700">
+      Password
+  </label>
+  <div class="mt-1 relative">
+      <input id="password" 
+             name="password" 
+             type="password" 
+             autocomplete="current-password" 
+             required
+             class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
+                    focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm pr-10">
+      <button type="button" 
+              id="toggle-password-visibility"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none">
+          <i data-lucide="eye" class="w-5 h-5"></i>
+      </button>
+  </div>
+</div>
+                <div class="flex items-center justify-end">
+                    <div class="text-sm">
+                        <a href="#" id="forgot-password-link" class="font-medium text-blue-600 hover:text-blue-500">
+                            Forgot your password?
+                        </a>
+                    </div>
+                </div>
+                <p id="login-error" class="text-sm text-red-600 hidden">Invalid Email or password. Please try again.</p>
+
+                <div>
+                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Sign in
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="dashboard-section" style="display: none;">
+  <header class="bg-white shadow-md">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex items-center">
+                 <img src="https://www.dropbox.com/scl/fi/vmprhd0i0781yytkkukfg/Untitled-Kasam-Sales-Insights.png?rlkey=hazshd3m3mkftjssizqfzpmw3&st=f00pivkz&raw=1" 
+                 alt="Kasam Sales Insights Logo" 
+                 class="h-20 w-auto mr-4 object-contain mt-4"> 
+                <h1 class="text-Base font-extrabold text-gray-800 mt-4">Sales Dashboard</h1>
+            </div>
+            <button id="logout-button" class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    </div>
+</header>
+  <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+    <div class="mb-6 p-4 bg-white rounded-lg shadow">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
+        <div class="md:col-span-1">
+            <label for="location-filter-button" class="block text-sm font-medium text-gray-700">Location(s)</label>
+            <div class="relative" id="location-filter-container">
+                <button id="location-filter-button" class="mt-1 w-full border border-gray-300 rounded-md p-2 bg-white text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <span id="location-filter-text" class="truncate">Select Location(s)</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i>
+                </button>
+                <div id="location-filter-dropdown" class="hidden absolute z-20 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto p-2 space-y-1">
+                </div>
+            </div>
+        </div>
+        <div class="md:col-span-1">
+            <label for="from-date-filter" class="block text-sm font-medium text-gray-700">From Date</label>
+            <input type="date" id="from-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div class="md:col-span-1">
+            <label for="to-date-filter" class="block text-sm font-medium text-gray-700">To Date</label>
+            <input type="date" id="to-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div class="md:col-span-1">
+             <button id="search-button" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+             <i data-lucide="search" class="w-4 h-4"></i>
+             <span>Search</span>
+           </button>
+        </div>
+        <div id="download-container" class="md:col-span-1">
+          <button id="download-csv" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            <span>Download CSV</span>
+          </button>
+        </div>
+    </div>
+</div>
+
+    <div id="kpi-grid" class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5 mb-6"></div>
+
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead id="data-table-head" class="bg-gray-50" style="position: sticky; top: 0; z-index: 20;">
+            </thead>
+          <tbody id="data-table-body" class="bg-white divide-y divide-gray-200">
+            </tbody>
+        </table>
+      </div>
+      <div id="no-data-message" class="hidden text-center py-16 px-4">
+        <i data-lucide="search-x" class="mx-auto h-12 w-12 text-gray-400"></i>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No Data Available</h3>
+        <p class="mt-1 text-sm text-gray-500">There is no sales data for the selected criteria. Please adjust your filters and click "Search".</p>
+      </div>
+      <div id="pagination-controls" class="flex justify-between items-center px-4 py-3 border-t border-gray-200 bg-gray-50 hidden">
+        <button id="prev-page-button" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+          Previous
+        </button>
+        <span class="text-sm text-gray-700">Page <span id="current-page">1</span> of <span id="total-pages">1</span></span>
+        <button id="next-page-button" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+          Next
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="loading-overlay" class="hidden fixed inset-0 bg-white bg-opacity-75 z-50 flex items-center justify-center">
+  <div class="flex items-center gap-2">
+    <svg class="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    <span class="text-lg font-medium text-gray-700">Loading Sales Data...</span>
+  </div>
+</div>
+
+<script>
+// =========== CONFIGURATION & CONSTANTS ===========
+const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbwVGCl3OP2_yBiumCfkbMk5Tygyyv6gyZ8REKqvvM3I0v7BsN5sce7OUlaxxRkEYnLR/exec';
+const ITEMS_PER_PAGE = 31; 
+const firebaseConfig = {
+  apiKey: "AIzaSyBjEyPKt25-Tl3EwBJuXrZjTL9I1D74T88",
+  authDomain: "kasam-sales-insight.firebaseapp.com",
+  projectId: "kasam-sales-insight",
+  storageBucket: "kasam-sales-insight.firebasestorage.app",
+  messagingSenderId: "60801599821",
+  appId: "G-8VP8F7WP1H"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// Ensure user is signed out automatically when browser is closed
+auth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
+  .then(() => {
+    console.log("Firebase auth persistence set to SESSION.");
+  })
+  .catch((error) => {
+    console.error("Failed to set auth persistence:", error);
+  });
+
+
+// =========== STATE VARIABLES ===========
+let salesData = [];
+let currentFilteredData = [];
+let currentPage = 1;
+let totalPages = 1;
+let isDashboardInitialized = false;
+
+// =========== DOM ELEMENT SELECTORS ===========
+const loginSection = document.getElementById('login-section');
+const loginForm = document.getElementById('login-form');
+const loginError = document.getElementById('login-error');
+const dashboardSection = document.getElementById('dashboard-section');
+const logoutButton = document.getElementById('logout-button');
+const locationFilterContainer = document.getElementById('location-filter-container');
+const locationFilterButton = document.getElementById('location-filter-button');
+const locationFilterText = document.getElementById('location-filter-text');
+const locationFilterDropdown = document.getElementById('location-filter-dropdown');
+const fromDateFilter = document.getElementById('from-date-filter');
+const toDateFilter = document.getElementById('to-date-filter');
+const searchButton = document.getElementById('search-button');
+const kpiGrid = document.getElementById('kpi-grid');
+const dataTableBody = document.getElementById('data-table-body');
+const noDataMessage = document.getElementById('no-data-message');
+const loadingOverlay = document.getElementById('loading-overlay');
+const downloadCsvButton = document.getElementById('download-csv');
+const downloadContainer = document.getElementById('download-container');
+const paginationControls = document.getElementById('pagination-controls');
+const prevPageButton = document.getElementById('prev-page-button');
+const nextPageButton = document.getElementById('next-page-button');
+const currentPageSpan = document.getElementById('current-page');
+const totalPagesSpan = document.getElementById('total-pages');
+// NEW SELECTOR FOR FORGOT PASSWORD
+const forgotPasswordLink = document.getElementById('forgot-password-link');
+
+// =========== LOGIN & AUTHENTICATION ===========
+async function handleLogin(event) {
+    event.preventDefault();
+    const email = event.target.email.value;
+    const password = event.target.password.value;
+    loginError.classList.add('hidden');
+
+    try {
+        await auth.signInWithEmailAndPassword(email, password);
+    } catch (error) {
+        console.error("Firebase Login Error:", error.message);
+        loginError.textContent = "Invalid credentials. Please check your Email and password.";
+        loginError.classList.remove('hidden');
+    }
+}
+
+// NEW FUNCTION FOR FORGOT PASSWORD
+async function handleForgotPassword(event) {
+    event.preventDefault();
+    const emailInput = document.getElementById('email');
+    const email = emailInput.value.trim();
+    loginError.classList.add('hidden');
+
+    if (!email) {
+        loginError.textContent = "Please enter your email address above before clicking 'Forgot your password?'.";
+        loginError.classList.remove('hidden');
+        emailInput.focus();
+        return;
+    }
+
+    try {
+        await auth.sendPasswordResetEmail(email);
+        alert(`Password reset email sent successfully to ${email}. Please check your inbox.`);
+        // Optional: Clear the error message if it was visible
+        loginError.classList.add('hidden');
+    } catch (error) {
+        console.error("Firebase Password Reset Error:", error.code, error.message);
+        
+        // MODIFIED: Check for specific Firebase error code for unregistered user
+        if (error.code === 'auth/user-not-found') {
+             loginError.textContent = "This email address is no longer registered. Please check the email or sign up.";
+        } else {
+             // General failure message for other issues (e.g., network error, invalid email format)
+             loginError.textContent = "Failed to send reset email. Please ensure the email is valid and try again.";
+        }
+        
+        loginError.classList.remove('hidden');
+    }
+}
+
+async function handleLogout() {
+    try {
+        await auth.signOut();
+        sessionStorage.removeItem('userRole');
+        location.reload();
+    } catch (error) {
+        console.error("Logout Error:", error);
+        alert("Failed to log out.");
+    }
+}
+
+function showDashboard() {
+    loginSection.style.display = 'none';
+    dashboardSection.style.display = 'block';
+    
+    if (!isDashboardInitialized) {
+        initializeDashboard();
+        isDashboardInitialized = true;
+    }
+}
+
+
+// =========== UTILITY FUNCTIONS ===========
+function formatDate(dateString) {
+  if (!dateString) return '-';
+  const parts = dateString.split(/[-/]/);
+  if (parts.length === 3) {
+    let [day, month, year] = parts;
+    if (year.length === 2) year = "20" + year;
+    return `${day.padStart(2,'0')}-${month.padStart(2,'0')}-${year}`;
+  }
+  return dateString;
+}
+
+function parseSheetDate(dateString) {
+  if (!dateString) return null;
+  const parts = String(dateString).split(/[-/]/).map(p => p.trim());
+  if (parts.length === 3) {
+    if (parts[0].length === 4) { // yyyy-mm-dd
+      return new Date(`${parts[0]}-${parts[1].padStart(2,'0')}-${parts[2].padStart(2,'0')}`);
+    } else { // dd-mm-yyyy or dd/mm/yyyy
+      let day = parts[0].padStart(2,'0');
+      let month = parts[1].padStart(2,'0');
+      let year = parts[2].length === 2 ? '20' + parts[2] : parts[2];
+      return new Date(`${year}-${month}-${day}`);
+    }
+  }
+  const parsed = new Date(dateString);
+  return isNaN(parsed) ? null : parsed;
+}
+
+// =========== CORE DASHBOARD FUNCTIONS ===========
+async function initializeDashboard() {
+  loadingOverlay.classList.remove('hidden');
+  try {
+    await fetchSalesData();
+    populateFilters();
+    addEventListeners();
+    renderKpis(true); 
+    renderTable(true);
+    updatePaginationControls();
+  } catch (err) {
+    console.error("Failed to initialize:", err);
+    alert("Could not load data from Google Sheets. Check your Apps Script URL, sheet name, and column headers.");
+  } finally {
+    loadingOverlay.classList.add('hidden');
+    lucide.createIcons();
+  }
+}
+
+async function fetchSalesData() {
+  const resp = await fetch(GOOGLE_SHEET_API_URL);
+  if (!resp.ok) throw new Error(`HTTP error! status: ${resp.status}`);
+  const data = await resp.json();
+  salesData = data.map(item => ({
+    store: item.store || '',
+    date: item.date || '',
+    posCash: parseFloat(String(item.posCash).replace(/,/g, '').trim()) || 0,
+    depositedCash: parseFloat(String(item.depositedCash).replace(/,/g, '').trim()) || 0,
+    expenses: parseFloat(String(item.expenses).replace(/,/g, '').trim()) || 0,
+    cashDiff: parseFloat(String(item.cashDiff).replace(/,/g, '').trim()) || 0,
+    posCard: parseFloat(String(item.posCard).replace(/,/g, '').trim()) || 0,
+    cardSettled: parseFloat(String(item.cardSettled).replace(/,/g, '').trim()) || 0,
+    cardDiff: parseFloat(String(item.cardDiff).replace(/,/g, '').trim()) || 0,
+    posUpi: parseFloat(String(item.posUpi).replace(/,/g, '').trim()) || 0,
+    upiSettled: parseFloat(String(item.upiSettled).replace(/,/g, '').trim()) || 0,
+    upiDiff: parseFloat(String(item.upiDiff).replace(/,/g, '').trim()) || 0,
+    overallDiff: parseFloat(String(item.overallDiff).replace(/,/g, '').trim()) || 0,
+    remarks: item.remarks || ''
+  }));
+}
+
+function populateFilters() {
+  if (!salesData.length) return;
+  const locs = [...new Set(salesData.map(d => d.store))].filter(Boolean).sort();
+  locationFilterDropdown.innerHTML = locs.map(l => `
+    <div class="flex items-center">
+      <input id="loc-${l.replace(/\s+/g, '-')}" type="checkbox" value="${l}" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+      <label for="loc-${l.replace(/\s+/g, '-')}" class="ml-2 block text-sm text-gray-900">${l}</label>
+    </div>
+  `).join('');
+}
+
+function updateDashboard() {
+  const selectedLocations = Array.from(document.querySelectorAll('#location-filter-dropdown input:checked')).map(cb => cb.value);
+  const fromDateValue = fromDateFilter.value;
+  const toDateValue = toDateFilter.value;
+
+  if (selectedLocations.length === 0 || !fromDateValue || !toDateValue) {
+    alert("Please select at least one location, a 'From Date', and a 'To Date' before searching.");
+    return;
+  }
+
+  const fromDate = new Date(fromDateValue);
+  const toDate = new Date(toDateValue);
+  fromDate.setHours(0, 0, 0, 0);
+  toDate.setHours(23, 59, 59, 999);
+  
+  const lowercasedLocations = selectedLocations.map(l => l.trim().toLowerCase());
+
+  currentFilteredData = salesData.filter(d => {
+    if (!d.date || !d.store) return false;
+    const itemDate = parseSheetDate(d.date);
+    if (!itemDate) return false;
+    itemDate.setHours(0,0,0,0);
+    const locationMatch = lowercasedLocations.includes(d.store.trim().toLowerCase());
+    const dateMatch = itemDate >= fromDate && itemDate <= toDate;
+    return locationMatch && dateMatch;
+  });
+
+  currentPage = 1;
+  totalPages = Math.ceil(currentFilteredData.length / ITEMS_PER_PAGE);
+
+  renderKpis();
+  renderTable();
+  updatePaginationControls();
+}
+function renderKpis(clear = false) {
+  if (clear || !currentFilteredData.length) {
+      kpiGrid.innerHTML = '';
+      return;
+  }
+
+  const sum = key => currentFilteredData.reduce((s, d) => s + (d[key] || 0), 0);
+  const totalPOSValue = currentFilteredData.reduce((s, d) => s + (d.posCash || 0) + (d.posCard || 0) + (d.posUpi || 0), 0);
+  const totalSettled = currentFilteredData.reduce((s, d) => s + (d.depositedCash || 0) + (d.cardSettled || 0) + (d.upiSettled || 0), 0);
+  const overallDifferenceValue = sum('overallDiff'); // New variable for easy access and check
+
+  // --- Color Logic for Overall Difference ---
+  const overallDifferenceClass = overallDifferenceValue < 0 ? 'text-red-600' : 'text-green-600';
+  // ------------------------------------------
+
+  const totalCash = sum('posCash');
+  const totalCard = sum('posCard');
+  const totalUpi  = sum('posUpi');
+  const cashPerc = totalPOSValue ? ((totalCash / totalPOSValue) * 100).toFixed(1) : 0;
+  const cardPerc = totalPOSValue ? ((totalCard / totalPOSValue) * 100).toFixed(1) : 0;
+  const upiPerc  = totalPOSValue ? ((totalUpi / totalPOSValue) * 100).toFixed(1) : 0;
+
+  const kpis = [
+    { title: 'Total POS Value', value: totalPOSValue, icon: 'banknote' },
+    { title: 'Total Settled', value: totalSettled, icon: 'landmark' },
+    { title: 'Total Expenses', value: sum('expenses'), icon: 'smartphone' },
+    // Apply the dynamic class to the Overall Difference
+    { title: 'Overall Difference', value: overallDifferenceValue, icon: 'arrow-left-right', valueClass: overallDifferenceClass },
+    { 
+      title: 'Payment Method Split', 
+      value: `
+        <span class="text-blue-600 font-semibold">Card ${cardPerc}%</span>  
+        <span class="text-green-600 font-semibold">Cash ${cashPerc}%</span>  
+        <span class="text-purple-600 font-semibold">UPI ${upiPerc}%</span>
+      `, 
+      icon: 'pie-chart',
+      isHTML: true
+    }
+  ];
+
+  kpiGrid.innerHTML = kpis.map(k => {
+    // Determine the class for the value text (default to black/gray if not specified)
+    const valueColorClass = k.valueClass || 'text-gray-900'; 
+    
+    return `
+    <div class="kpi-card bg-white p-5 rounded-lg">
+      <div class="flex items-center justify-center h-full">
+        <div class="p-3 rounded-full bg-blue-100 text-blue-600 flex-shrink-0">
+          <i data-lucide="${k.icon}" class="w-6 h-6"></i>
+        </div>
+        <div class="ml-4 flex flex-col items-center justify-center text-center">
+          <p class="text-sm font-medium text-gray-500">${k.title}</p>
+          <p class="text-2xl font-bold ${valueColorClass}">
+            ${k.isHTML ? k.value : `₹${k.value.toLocaleString('en-IN')}`}
+          </p>
+        </div>
+      </div>
+    </div>
+  `}).join('');
+  lucide.createIcons();
+}
+
+function renderTable(clear = false) {
+  const dataTableHead = document.getElementById('data-table-head');
+  
+  if (clear || !currentFilteredData.length) {
+    dataTableHead.innerHTML = '';
+    dataTableBody.innerHTML = '';
+    noDataMessage.classList.remove('hidden');
+    paginationControls.classList.add('hidden');
+    return;
+  }
+  noDataMessage.classList.add('hidden');
+  paginationControls.classList.remove('hidden');
+
+  const totals = currentFilteredData.reduce((acc, d) => {
+    acc.posCash += d.posCash; acc.depositedCash += d.depositedCash; acc.expenses += d.expenses; acc.cashDiff += d.cashDiff;
+    acc.posCard += d.posCard; acc.cardSettled += d.cardSettled; acc.cardDiff += d.cardDiff; acc.posUpi += d.posUpi;
+    acc.upiSettled += d.upiSettled; acc.upiDiff += d.upiDiff; acc.overallDiff += d.overallDiff;
+    return acc;
+  }, {
+    posCash: 0, depositedCash: 0, expenses: 0, cashDiff: 0, posCard: 0, cardSettled: 0, cardDiff: 0, posUpi: 0,
+    upiSettled: 0, upiDiff: 0, overallDiff: 0
+  });
+
+  const totalCashClass = totals.cashDiff >= 0 ? 'text-green-600' : 'text-red-600';
+  const totalCardClass = totals.cardDiff >= 0 ? 'text-green-600' : 'text-red-600';
+  const totalUpiClass  = totals.upiDiff >= 0 ? 'text-green-600' : 'text-red-600';
+  const totalOverallClass = totals.overallDiff >= 0 ? 'text-green-600' : 'text-red-600';
+
+  const totalsRowHtml = `
+    <tr class="total-row">
+      <td class="px-6 py-4 text-sm font-bold">TOTALS</td>
+      <td class="px-6 py-4 text-sm font-bold">-</td>
+      <td class="px-6 py-4 text-sm font-bold">₹${totals.posCash.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm font-bold">₹${totals.depositedCash.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm font-bold">₹${totals.expenses.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm font-bold ${totalCashClass}">₹${totals.cashDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm font-bold">₹${totals.posCard.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm font-bold">₹${totals.cardSettled.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm font-bold ${totalCardClass}">₹${totals.cardDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm font-bold">₹${totals.posUpi.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm font-bold">₹${totals.upiSettled.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm font-bold ${totalUpiClass}">₹${totals.upiDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-xl font-bold ${totalOverallClass}">₹${totals.overallDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm font-bold">-</td>
+    </tr>
+  `;
+
+  const headerRowHtml = `
+    <tr>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Store</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">POS Cash</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Deposited Cash</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Expenses / Discounts</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Cash Diff</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">POS Card</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Card Settled</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Card Diff</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">POS UPI</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">UPI Settled</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">UPI Diff</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Overall Difference</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Remarks</th>
+    </tr>
+  `;
+
+  dataTableHead.innerHTML = totalsRowHtml + headerRowHtml;
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedData = currentFilteredData.slice(startIndex, endIndex);
+
+  const dataRowsHtml = paginatedData.map(d => {
+    const cashClass = d.cashDiff >= 0 ? 'text-green-600' : 'text-red-600';
+    const cardClass = d.cardDiff >= 0 ? 'text-green-600' : 'text-red-600';
+    const upiClass  = d.upiDiff >= 0 ? 'text-green-600' : 'text-red-600';
+    const overallClass = d.overallDiff >= 0 ? 'text-green-600' : 'text-red-600';
+
+    return `
+    <tr class="hover:bg-gray-50">
+      <td class="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">${d.store}</td>
+      <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">${formatDate(d.date)}</td>
+      <td class="px-6 py-4 text-sm text-gray-600">₹${d.posCash.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm text-gray-600">₹${d.depositedCash.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm text-gray-600">₹${d.expenses.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm ${cashClass}">₹${d.cashDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm text-gray-600">₹${d.posCard.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm text-gray-600">₹${d.cardSettled.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm ${cardClass}">₹${d.cardDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm text-gray-600">₹${d.posUpi.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm text-gray-600">₹${d.upiSettled.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm ${upiClass}">₹${d.upiDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-xl font-semibold ${overallClass}">₹${d.overallDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">${d.remarks || '-'}</td>
+    </tr>
+    `;
+  }).join('');
+
+  dataTableBody.innerHTML = dataRowsHtml;
+}
+
+function updatePaginationControls() {
+  if (currentFilteredData.length > ITEMS_PER_PAGE) {
+    paginationControls.classList.remove('hidden');
+    currentPageSpan.textContent = currentPage;
+    totalPagesSpan.textContent = totalPages;
+    prevPageButton.disabled = currentPage === 1;
+    nextPageButton.disabled = currentPage === totalPages;
+  } else {
+    paginationControls.classList.add('hidden');
+  }
+}
+
+function goToPage(page) {
+  currentPage = page;
+  renderTable();
+  updatePaginationControls();
+}
+
+function updateLocationButtonText() {
+    const selected = Array.from(document.querySelectorAll('#location-filter-dropdown input:checked'));
+    if (selected.length === 0) {
+        locationFilterText.textContent = 'Select Location(s)';
+    } else if (selected.length === 1) {
+        locationFilterText.textContent = selected[0].value;
+    } else {
+        locationFilterText.textContent = `${selected.length} locations selected`;
+    }
+}
+
+function addEventListeners() {
+  logoutButton.addEventListener('click', handleLogout);
+  searchButton.addEventListener('click', updateDashboard);
+  downloadCsvButton.addEventListener('click', downloadCSV);
+  
+  locationFilterButton.addEventListener('click', () => {
+    locationFilterDropdown.classList.toggle('hidden');
+  });
+
+  locationFilterDropdown.addEventListener('change', updateLocationButtonText);
+
+  document.addEventListener('click', (event) => {
+    if (!locationFilterContainer.contains(event.target)) {
+      locationFilterDropdown.classList.add('hidden');
+    }
+  });
+
+  prevPageButton.addEventListener('click', () => {
+    if (currentPage > 1) goToPage(currentPage - 1);
+  });
+  nextPageButton.addEventListener('click', () => {
+    if (currentPage < totalPages) goToPage(currentPage + 1);
+  });
+}
+
+// =========== DATA EXPORT ===========
+function downloadCSV() {
+  if (!currentFilteredData.length) { alert("No data to download. Please perform a search first."); return; }
+  
+  const headers = ["store","date","posCash","depositedCash","expenses","cashDiff","posCard","cardSettled","cardDiff","posUpi","upiSettled","upiDiff","overallDiff","remarks"];
+  
+  const totals = currentFilteredData.reduce((acc, d) => {
+    acc.posCash += d.posCash; acc.depositedCash += d.depositedCash; acc.expenses += d.expenses; acc.cashDiff += d.cashDiff;
+    acc.posCard += d.posCard; acc.cardSettled += d.cardSettled; acc.cardDiff += d.cardDiff; acc.posUpi += d.posUpi;
+    acc.upiSettled += d.upiSettled; acc.upiDiff += d.upiDiff; acc.overallDiff += d.overallDiff;
+    return acc;
+  }, {
+    posCash: 0, depositedCash: 0, expenses: 0, cashDiff: 0, posCard: 0, cardSettled: 0, cardDiff: 0, posUpi: 0,
+    upiSettled: 0, upiDiff: 0, overallDiff: 0
+  });
+
+  const totalRow = {
+      store: "TOTALS", date: "", posCash: totals.posCash, depositedCash: totals.depositedCash, expenses: totals.expenses, 
+      cashDiff: totals.cashDiff, posCard: totals.posCard, cardSettled: totals.cardSettled, cardDiff: totals.cardDiff, 
+      posUpi: totals.posUpi, upiSettled: totals.upiSettled, upiDiff: totals.upiDiff, overallDiff: totals.overallDiff,
+      remarks: ""
+  };
+
+  const allDataForCsv = [...currentFilteredData, totalRow];
+  const rows = allDataForCsv.map(d => {
+    const formattedRow = {...d, date: formatDate(d.date)};
+    return headers.map(h => `"${String(formattedRow[h] || '').replace(/"/g, '""')}"`).join(",");
+  }).join("\n");
+  
+  const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + rows;
+  const link = document.createElement("a");
+  const selectedLocations = Array.from(document.querySelectorAll('#location-filter-dropdown input:checked')).map(cb => cb.value);
+  const locationString = selectedLocations.length > 1 ? 'multiple-locations' : (selectedLocations[0] || 'report').replace(/\s+/g, '_');
+  
+  link.setAttribute("href", encodeURI(csvContent));
+  link.setAttribute("download", `sales_report_${locationString}_from_${fromDateFilter.value}_to_${toDateFilter.value}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// =========== APP INITIALIZATION ===========
+document.addEventListener('DOMContentLoaded', () => {
+    // Password show/hide toggle
+const passwordInput = document.getElementById('password');
+const togglePasswordButton = document.getElementById('toggle-password-visibility');
+let isPasswordVisible = false;
+
+togglePasswordButton.addEventListener('click', () => {
+  isPasswordVisible = !isPasswordVisible;
+  passwordInput.type = isPasswordVisible ? 'text' : 'password';
+  
+  // Swap icon
+  togglePasswordButton.innerHTML = `<i data-lucide="${isPasswordVisible ? 'eye-off' : 'eye'}" class="w-5 h-5"></i>`;
+  lucide.createIcons();
+});
+
+// Attach event listeners for Login and Forgot Password
+loginForm.addEventListener('submit', handleLogin);
+if (forgotPasswordLink) {
+    forgotPasswordLink.addEventListener('click', handleForgotPassword);
+}
+    
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            showDashboard();
+        } else {
+            loginSection.style.display = 'flex';
+            dashboardSection.style.display = 'none';
+        }
+    });
+    lucide.createIcons();
+});
+</script>
+</body>
+</html>
