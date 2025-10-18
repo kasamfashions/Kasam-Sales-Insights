@@ -4,10 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Kasam Sales Dashboard</title>
-<link rel="icon" type="image/png" href="https://www.dropbox.com/scl/fi/j7zs9pynfexa3z0w6y1q0/Kasam-Insights.png?rlkey=xawskoglatbpcfqbsjawecdcc&st=3mrsbn7i&raw=1">
-<link rel="shortcut icon" type="image/png" href="https://www.dropbox.com/scl/fi/j7zs9pynfexa3z0w6y1q0/Kasam-Insights.png?rlkey=xawskoglatbpcfqbsjawecdcc&st=3mrsbn7i&raw=1"> 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -28,6 +27,91 @@
   #data-table-head th {
     background-color: #f9fafb; /* This is Tailwind's bg-gray-50 */
   }
+
+  /* NEW STYLES FOR SIDEBAR & RESPONSIVENESS */
+  .sidebar {
+    width: 250px; /* Fixed width for the sidebar */
+    flex-shrink: 0;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    color: #4b5563; /* text-gray-600 */
+    transition: background-color 0.2s, color 0.2s;
+  }
+  .nav-link:hover {
+    background-color: #e5e7eb; /* bg-gray-200 */
+  }
+  .nav-link.active {
+    background-color: #bfdbfe; /* bg-blue-200 */
+    color: #1d4ed8; /* text-blue-700 */
+    font-weight: 600;
+  }
+  /* Ensure main content takes remaining width */
+  #main-content-wrapper {
+    flex-grow: 1;
+    min-width: 0; /* Allows content to shrink */
+  }
+
+  /* MOBILE / HAMBURGER MENU STYLES */
+  /* Hide sidebar on small screens by default, and use fixed positioning */
+  .sidebar-wrapper {
+    position: fixed;
+    top: 64px; /* Height of the header */
+    left: 0;
+    height: calc(100vh - 64px);
+    z-index: 40; /* Above regular content */
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  /* Show sidebar when menu is open */
+  .sidebar-wrapper.is-open {
+    transform: translateX(0);
+  }
+
+  /* Overlay to close sidebar when clicking outside on mobile */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 30; /* Below sidebar, above content */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .sidebar-wrapper.is-open + .sidebar-overlay {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Only show the menu button on smaller screens (below lg, same as Tailwind's md/lg break) */
+  #menu-button {
+    display: flex; /* Always display on small screens for this layout */
+  }
+
+  /* Override mobile styles for larger screens to always show sidebar */
+  @media (min-width: 1024px) { /* lg breakpoint in Tailwind */
+    .sidebar-wrapper {
+        position: static;
+        transform: translateX(0);
+        height: auto;
+    }
+    .sidebar-overlay {
+        display: none;
+    }
+    #menu-button {
+        display: none; /* Hide button on large screens */
+    }
+  }
+
 </style>
 </head>
 <body class="antialiased text-slate-700">
@@ -90,87 +174,210 @@
     </div>
 </div>
 
-<div id="dashboard-section" style="display: none;">
-  <header class="bg-white shadow-md">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+
+<div id="dashboard-section" style="display: none;" class="min-h-screen flex flex-col">
+  
+  <header class="bg-white shadow-md flex-shrink-0">
+    <div class="px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
             <div class="flex items-center">
+                <button id="menu-button" class="lg:hidden p-2 mr-3 text-gray-500 hover:text-gray-900">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+                
                  <img src="https://www.dropbox.com/scl/fi/vmprhd0i0781yytkkukfg/Untitled-Kasam-Sales-Insights.png?rlkey=hazshd3m3mkftjssizqfzpmw3&st=f00pivkz&raw=1" 
                  alt="Kasam Sales Insights Logo" 
                  class="h-20 w-auto mr-4 object-contain mt-4"> 
-                <h1 class="text-Base font-extrabold text-gray-800 mt-4">Sales Dashboard</h1>
+                <h1 class="text-xl font-extrabold text-gray-800 mt-4">Kasam Fashions Private Limited</h1>
             </div>
-            <button id="logout-button" class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700">
-                <i data-lucide="log-out" class="w-4 h-4"></i>
-                <span>Logout</span>
-            </button>
-        </div>
+            </div>
     </div>
 </header>
-  <main class="container mx-auto p-4 sm:p-6 lg:p-8">
-    <div class="mb-6 p-4 bg-white rounded-lg shadow">
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
-        <div class="md:col-span-1">
-            <label for="location-filter-button" class="block text-sm font-medium text-gray-700">Location(s)</label>
-            <div class="relative" id="location-filter-container">
-                <button id="location-filter-button" class="mt-1 w-full border border-gray-300 rounded-md p-2 bg-white text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <span id="location-filter-text" class="truncate">Select Location(s)</span>
-                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i>
-                </button>
-                <div id="location-filter-dropdown" class="hidden absolute z-20 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto p-2 space-y-1">
+  
+  <div class="flex flex-1 overflow-hidden">
+    
+    <div id="sidebar-wrapper" class="sidebar-wrapper lg:static lg:block">
+        <aside class="sidebar bg-white border-r border-gray-200 p-4 h-full overflow-y-auto">
+            <div class="flex flex-col h-full">
+                <div class="space-y-1 flex-grow">
+                    <a href="#" id="nav-home" data-section="welcome-home-screen" class="nav-link active">
+                        <i data-lucide="home" class="w-5 h-5 mr-3"></i>
+                        Home
+                    </a>
+                    <a href="#" id="nav-reports" data-section="reports-content" class="nav-link">
+                        <i data-lucide="file-text" class="w-5 h-5 mr-3"></i>
+                        Reports
+                    </a>
+                    <a href="#" id="nav-dashboard" data-section="dashboard-content" class="nav-link">
+                        <i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i>
+                        Dashboard
+                    </a>
+                </div>
+                
+                <div class="mt-auto pt-4 border-t border-gray-200">
+                    <button id="logout-button" class="w-full flex items-center justify-start gap-3 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+    </div>
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <main id="main-content-wrapper" class="p-4 sm:p-6 lg:p-8 overflow-y-auto w-full min-h-[calc(100vh-64px)]">
+        
+        <div id="welcome-home-screen" style="display: block;" class="flex flex-col items-center justify-center p-12 h-full bg-white rounded-lg shadow">
+            <img src="https://www.dropbox.com/scl/fi/vmprhd0i0781yytkkukfg/Untitled-Kasam-Sales-Insights.png?rlkey=hazshd3m3mkftjssizqfzpmw3&st=f00pivkz&raw=1" 
+                 alt="Kasam Sales Insights Logo" 
+                 class="h-60 w-auto mb-6 object-contain"> 
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Welcome to Kasam Sales Insights</h2>
+            <p class="text-xl text-gray-600 max-w-2xl text-center">Use the navigation panel to view reports, track sales trends, and analyze payment differences.</p>
+            <div class="mt-8 flex space-x-4">
+                <button id="home-view-reports" class="px-6 py-3 text-lg font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700">View Reports</button>
+                <button id="home-view-dashboard" class="px-6 py-3 text-lg font-semibold text-white bg-purple-600 rounded-md hover:bg-purple-700">View Dashboard</button>
+            </div>
+        </div>
+        <div id="dashboard-content" class="hidden relative">
+            
+            <div class="mb-6 p-4 bg-white rounded-lg shadow">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
+                    <div class="md:col-span-1">
+                        <label for="dash-location-filter-button" class="block text-sm font-medium text-gray-700">Location(s)</label>
+                        <div class="relative" id="dash-location-filter-container">
+                            <button id="dash-location-filter-button" class="mt-1 w-full border border-gray-300 rounded-md p-2 bg-white text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <span id="dash-location-filter-text" class="truncate">Select Location(s)</span>
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i>
+                            </button>
+                            <div id="dash-location-filter-dropdown" class="hidden absolute z-20 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto p-2 space-y-1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-1">
+                        <label for="dash-from-date-filter" class="block text-sm font-medium text-gray-700">From Date</label>
+                        <input type="date" id="dash-from-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="md:col-span-1">
+                        <label for="dash-to-date-filter" class="block text-sm font-medium text-gray-700">To Date</label>
+                        <input type="date" id="dash-to-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="md:col-span-1">
+                        <button id="dash-search-button" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">
+                        <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                        <span>Search Dashboard</span>
+                        </button>
+                    </div>
+                    <div class="md:col-span-1"></div> 
+                </div>
+            </div>
+
+            <div id="dash-kpi-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                </div>
+
+            <div id="chart-area-wrapper" class="relative">
+
+                <div id="charts-container" class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8">
+    <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-1">
+        <h3 class="text-lg font-semibold mb-4 text-gray-800">Payment Method Contribution (POS Value)</h3>
+        <div class="relative min-h-[300px] flex items-center justify-center">
+            <canvas id="payment-method-chart"></canvas>
+        </div>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-1">
+        <h3 class="text-lg font-semibold mb-4 text-gray-800">Difference in Card/Card and UPI</h3>
+        <div class="relative min-h-[300px] flex items-center justify-center">
+            <canvas id="difference-bar-chart"></canvas>
+        </div>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-1">
+        <h3 class="text-lg font-semibold mb-4 text-gray-800">No. of bills</h3>
+        <div class="relative min-h-[300px] flex items-center justify-center">
+            <canvas id="bills-count-chart"></canvas>
+        </div>
+    </div>
+                    <div class="lg:col-span-3 bg-white p-6 rounded-lg shadow-md min-h-[400px]">
+                        <h3 class="text-lg font-semibold mb-4 text-gray-800">Sales Trend (Overall POS Value)</h3>
+                        <div class="relative h-96">
+                            <canvas id="sales-trend-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dash-initial-message" class="absolute top-0 left-0 right-0 bottom-0 w-full h-full flex flex-col items-center justify-center bg-white/100 rounded-lg shadow" style="display: flex;">
+                <i data-lucide="bar-chart-3" class="h-20 w-20 text-blue-400 mb-4"></i>
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Build Your Dashboard!</h2>
+                <p class="text-gray-600 text-lg">Select filters above and click 'Search Dashboard' to generate charts.</p>
+            </div>
+
+            </div> </div>
+        
+        <div id="reports-content" style="display: none;">
+            <div class="mb-6 p-4 bg-white rounded-lg shadow">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
+                    <div class="md:col-span-1">
+                        <label for="location-filter-button" class="block text-sm font-medium text-gray-700">Location(s)</label>
+                        <div class="relative" id="location-filter-container">
+                            <button id="location-filter-button" class="mt-1 w-full border border-gray-300 rounded-md p-2 bg-white text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <span id="location-filter-text" class="truncate">Select Location(s)</span>
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i>
+                            </button>
+                            <div id="location-filter-dropdown" class="hidden absolute z-20 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto p-2 space-y-1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-1">
+                        <label for="from-date-filter" class="block text-sm font-medium text-gray-700">From Date</label>
+                        <input type="date" id="from-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="md:col-span-1">
+                        <label for="to-date-filter" class="block text-sm font-medium text-gray-700">To Date</label>
+                        <input type="date" id="to-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="md:col-span-1">
+                        <button id="search-button" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                        <i data-lucide="search" class="w-4 h-4"></i>
+                        <span>Search</span>
+                        </button>
+                    </div>
+                    <div id="download-container" class="md:col-span-1">
+                        <button id="download-csv" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span>Download CSV</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="kpi-grid" class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5 mb-6"></div>
+
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                    <thead id="data-table-head" class="bg-gray-50" style="position: sticky; top: 0; z-index: 20;">
+                    </thead>
+                    <tbody id="data-table-body" class="bg-white divide-y divide-gray-200">
+                    </tbody>
+                    </table>
+                </div>
+                <div id="no-data-message" class="hidden text-center py-16 px-4">
+                    <i data-lucide="search-x" class="mx-auto h-12 w-12 text-gray-400"></i>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">No Data Available</h3>
+                    <p class="mt-1 text-sm text-gray-500">There is no sales data for the selected criteria. Please adjust your filters and click "Search".</p>
+                </div>
+                <div id="pagination-controls" class="flex justify-between items-center px-4 py-3 border-t border-gray-200 bg-gray-50 hidden">
+                    <button id="prev-page-button" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Previous
+                    </button>
+                    <span class="text-sm text-gray-700">Page <span id="current-page">1</span> of <span id="total-pages">1</span></span>
+                    <button id="next-page-button" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Next
+                    </button>
                 </div>
             </div>
         </div>
-        <div class="md:col-span-1">
-            <label for="from-date-filter" class="block text-sm font-medium text-gray-700">From Date</label>
-            <input type="date" id="from-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-        </div>
-        <div class="md:col-span-1">
-            <label for="to-date-filter" class="block text-sm font-medium text-gray-700">To Date</label>
-            <input type="date" id="to-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-        </div>
-        <div class="md:col-span-1">
-             <button id="search-button" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
-             <i data-lucide="search" class="w-4 h-4"></i>
-             <span>Search</span>
-           </button>
-        </div>
-        <div id="download-container" class="md:col-span-1">
-          <button id="download-csv" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700">
-            <i data-lucide="download" class="w-4 h-4"></i>
-            <span>Download CSV</span>
-          </button>
-        </div>
-    </div>
-</div>
-
-    <div id="kpi-grid" class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5 mb-6"></div>
-
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead id="data-table-head" class="bg-gray-50" style="position: sticky; top: 0; z-index: 20;">
-            </thead>
-          <tbody id="data-table-body" class="bg-white divide-y divide-gray-200">
-            </tbody>
-        </table>
-      </div>
-      <div id="no-data-message" class="hidden text-center py-16 px-4">
-        <i data-lucide="search-x" class="mx-auto h-12 w-12 text-gray-400"></i>
-        <h3 class="mt-2 text-sm font-medium text-gray-900">No Data Available</h3>
-        <p class="mt-1 text-sm text-gray-500">There is no sales data for the selected criteria. Please adjust your filters and click "Search".</p>
-      </div>
-      <div id="pagination-controls" class="flex justify-between items-center px-4 py-3 border-t border-gray-200 bg-gray-50 hidden">
-        <button id="prev-page-button" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
-          Previous
-        </button>
-        <span class="text-sm text-gray-700">Page <span id="current-page">1</span> of <span id="total-pages">1</span></span>
-        <button id="next-page-button" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
-          Next
-        </button>
-      </div>
-    </div>
-  </main>
+        
+    </main>
+  </div>
 </div>
 
 <div id="loading-overlay" class="hidden fixed inset-0 bg-white bg-opacity-75 z-50 flex items-center justify-center">
@@ -216,7 +423,10 @@ let currentPage = 1;
 let totalPages = 1;
 let isDashboardInitialized = false;
 
-// =========== DOM ELEMENT SELECTORS ===========
+// NEW: Chart Instances (ADDED billsCountChart)
+let paymentMethodChart, differenceBarChart, salesTrendChart, billsCountChart;
+
+// =========== DOM ELEMENT SELECTORS (ORIGINAL REPORTS) ===========
 const loginSection = document.getElementById('login-section');
 const loginForm = document.getElementById('login-form');
 const loginError = document.getElementById('login-error');
@@ -240,10 +450,36 @@ const prevPageButton = document.getElementById('prev-page-button');
 const nextPageButton = document.getElementById('next-page-button');
 const currentPageSpan = document.getElementById('current-page');
 const totalPagesSpan = document.getElementById('total-pages');
-// NEW SELECTOR FOR FORGOT PASSWORD
-const forgotPasswordLink = document.getElementById('forgot-password-link');
 
-// =========== LOGIN & AUTHENTICATION ===========
+// NEW SELECTORS FOR HOME & DASHBOARD
+const navHome = document.getElementById('nav-home');
+const welcomeHomeScreen = document.getElementById('welcome-home-screen');
+const homeViewReportsButton = document.getElementById('home-view-reports');
+const homeViewDashboardButton = document.getElementById('home-view-dashboard');
+
+const navReports = document.getElementById('nav-reports');
+const navDashboard = document.getElementById('nav-dashboard');
+const reportsContent = document.getElementById('reports-content');
+const dashboardContent = document.getElementById('dashboard-content'); // Renamed from welcome-screen
+
+// NEW DASHBOARD FILTER & KPI SELECTORS
+const dashLocationFilterContainer = document.getElementById('dash-location-filter-container');
+const dashLocationFilterButton = document.getElementById('dash-location-filter-button');
+const dashLocationFilterText = document.getElementById('dash-location-filter-text');
+const dashLocationFilterDropdown = document.getElementById('dash-location-filter-dropdown');
+const dashFromDateFilter = document.getElementById('dash-from-date-filter');
+const dashToDateFilter = document.getElementById('dash-to-date-filter');
+const dashSearchButton = document.getElementById('dash-search-button');
+const dashInitialMessage = document.getElementById('dash-initial-message');
+const dashKpiGrid = document.getElementById('dash-kpi-grid');
+
+// NEW HAMBURGER MENU SELECTORS
+const menuButton = document.getElementById('menu-button');
+const sidebarWrapper = document.getElementById('sidebar-wrapper');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+
+// =========== LOGIN & AUTHENTICATION (UNMODIFIED) ===========
 async function handleLogin(event) {
     event.preventDefault();
     const email = event.target.email.value;
@@ -255,40 +491,6 @@ async function handleLogin(event) {
     } catch (error) {
         console.error("Firebase Login Error:", error.message);
         loginError.textContent = "Invalid credentials. Please check your Email and password.";
-        loginError.classList.remove('hidden');
-    }
-}
-
-// NEW FUNCTION FOR FORGOT PASSWORD
-async function handleForgotPassword(event) {
-    event.preventDefault();
-    const emailInput = document.getElementById('email');
-    const email = emailInput.value.trim();
-    loginError.classList.add('hidden');
-
-    if (!email) {
-        loginError.textContent = "Please enter your email address above before clicking 'Forgot your password?'.";
-        loginError.classList.remove('hidden');
-        emailInput.focus();
-        return;
-    }
-
-    try {
-        await auth.sendPasswordResetEmail(email);
-        alert(`Password reset email sent successfully to ${email}. Please check your inbox.`);
-        // Optional: Clear the error message if it was visible
-        loginError.classList.add('hidden');
-    } catch (error) {
-        console.error("Firebase Password Reset Error:", error.code, error.message);
-        
-        // MODIFIED: Check for specific Firebase error code for unregistered user
-        if (error.code === 'auth/user-not-found') {
-             loginError.textContent = "This email address is no longer registered. Please check the email or sign up.";
-        } else {
-             // General failure message for other issues (e.g., network error, invalid email format)
-             loginError.textContent = "Failed to send reset email. Please ensure the email is valid and try again.";
-        }
-        
         loginError.classList.remove('hidden');
     }
 }
@@ -306,16 +508,73 @@ async function handleLogout() {
 
 function showDashboard() {
     loginSection.style.display = 'none';
-    dashboardSection.style.display = 'block';
+    dashboardSection.style.display = 'flex'; // Changed to flex to support sidebar
     
     if (!isDashboardInitialized) {
         initializeDashboard();
         isDashboardInitialized = true;
     }
+    // Set 'Home' as the default view on login
+    switchSection('welcome-home-screen');
 }
 
+// MODIFIED: Handles navigation between sections & closes sidebar
+function switchSection(sectionId) {
+    // Hide all main content sections
+    reportsContent.style.display = 'none';
+    dashboardContent.style.display = 'none'; // Renamed element
+    welcomeHomeScreen.style.display = 'none'; // NEW: Hide Home Screen
 
-// =========== UTILITY FUNCTIONS ===========
+    // Show the selected section
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.style.display = 'block';
+        
+        // Special case for Dashboard
+        if (sectionId === 'dashboard-content') {
+            // Show initial message only if no charts are rendered (no data in charts)
+            if (!paymentMethodChart || (paymentMethodChart.data.datasets.length > 0 && paymentMethodChart.data.datasets[0].data.every(d => d === 0))) {
+                 dashInitialMessage.style.display = 'flex';
+            } else {
+                 dashInitialMessage.style.display = 'none';
+            }
+        } 
+        
+        // Special case for Reports
+        else if (sectionId === 'reports-content') {
+            // Ensure data is loaded but don't force a search if filters are empty
+            if (currentFilteredData.length === 0) {
+                 renderKpis(true); 
+                 renderTable(true);
+            }
+        }
+    }
+
+    // Update active class on navigation links
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+    });
+
+    const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
+    if (activeLink) {
+        activeLink.classList.add('active');
+    }
+
+    // NEW: Close sidebar on navigation (mobile)
+    closeSidebar();
+}
+
+// NEW FUNCTION: Toggles the sidebar state (open/close)
+function toggleSidebar() {
+    sidebarWrapper.classList.toggle('is-open');
+}
+
+// NEW FUNCTION: Closes the sidebar
+function closeSidebar() {
+    sidebarWrapper.classList.remove('is-open');
+}
+
+// =========== UTILITY FUNCTIONS (UNMODIFIED) ===========
 function formatDate(dateString) {
   if (!dateString) return '-';
   const parts = dateString.split(/[-/]/);
@@ -354,6 +613,7 @@ async function initializeDashboard() {
     renderKpis(true); 
     renderTable(true);
     updatePaginationControls();
+    renderDashKPIs([]); // Initialize with empty KPIs
   } catch (err) {
     console.error("Failed to initialize:", err);
     alert("Could not load data from Google Sheets. Check your Apps Script URL, sheet name, and column headers.");
@@ -381,29 +641,46 @@ async function fetchSalesData() {
     upiSettled: parseFloat(String(item.upiSettled).replace(/,/g, '').trim()) || 0,
     upiDiff: parseFloat(String(item.upiDiff).replace(/,/g, '').trim()) || 0,
     overallDiff: parseFloat(String(item.overallDiff).replace(/,/g, '').trim()) || 0,
-    remarks: item.remarks || ''
+    remarks: item.remarks || '',
+    // ADDED: Mapping the 'No. of bills' data from the Apps Script response (assuming header 'billCount')
+    billCount: parseInt(String(item.billCount).replace(/,/g, '').trim()) || 0 
   }));
 }
 
+// MODIFIED: populateFilters to populate both filter sets
 function populateFilters() {
   if (!salesData.length) return;
   const locs = [...new Set(salesData.map(d => d.store))].filter(Boolean).sort();
-  locationFilterDropdown.innerHTML = locs.map(l => `
+  
+  // REPORTS FILTERS (Original)
+  const reportsDropdownHtml = locs.map(l => `
     <div class="flex items-center">
       <input id="loc-${l.replace(/\s+/g, '-')}" type="checkbox" value="${l}" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
       <label for="loc-${l.replace(/\s+/g, '-')}" class="ml-2 block text-sm text-gray-900">${l}</label>
     </div>
   `).join('');
+  locationFilterDropdown.innerHTML = reportsDropdownHtml;
+
+  // DASHBOARD FILTERS (New - uses unique IDs for checkboxes)
+  const dashDropdownHtml = locs.map(l => `
+    <div class="flex items-center">
+      <input id="dash-loc-${l.replace(/\s+/g, '-')}" type="checkbox" value="${l}" class="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+      <label for="dash-loc-${l.replace(/\s+/g, '-')}" class="ml-2 block text-sm text-gray-900">${l}</label>
+    </div>
+  `).join('');
+  dashLocationFilterDropdown.innerHTML = dashDropdownHtml;
 }
 
-function updateDashboard() {
-  const selectedLocations = Array.from(document.querySelectorAll('#location-filter-dropdown input:checked')).map(cb => cb.value);
-  const fromDateValue = fromDateFilter.value;
-  const toDateValue = toDateFilter.value;
+
+// NEW: Common filtering logic for both tabs
+function applyFilterAndGetData(locationDropdown, fromDateInput, toDateInput) {
+  const selectedLocations = Array.from(locationDropdown.querySelectorAll('input:checked')).map(cb => cb.value);
+  const fromDateValue = fromDateInput.value;
+  const toDateValue = toDateInput.value;
 
   if (selectedLocations.length === 0 || !fromDateValue || !toDateValue) {
-    alert("Please select at least one location, a 'From Date', and a 'To Date' before searching.");
-    return;
+    // Alert is handled by the caller function (updateDashboard/updateCreativeDashboard)
+    return null;
   }
 
   const fromDate = new Date(fromDateValue);
@@ -413,7 +690,7 @@ function updateDashboard() {
   
   const lowercasedLocations = selectedLocations.map(l => l.trim().toLowerCase());
 
-  currentFilteredData = salesData.filter(d => {
+  const filteredData = salesData.filter(d => {
     if (!d.date || !d.store) return false;
     const itemDate = parseSheetDate(d.date);
     if (!itemDate) return false;
@@ -423,6 +700,20 @@ function updateDashboard() {
     return locationMatch && dateMatch;
   });
 
+  return filteredData;
+}
+
+
+// MODIFIED: updateDashboard to use the common filter logic
+function updateDashboard() {
+  const filteredData = applyFilterAndGetData(locationFilterDropdown, fromDateFilter, toDateFilter);
+  
+  if (!filteredData) {
+    alert("Please select at least one location, a 'From Date', and a 'To Date' before searching.");
+    return;
+  }
+
+  currentFilteredData = filteredData;
   currentPage = 1;
   totalPages = Math.ceil(currentFilteredData.length / ITEMS_PER_PAGE);
 
@@ -430,6 +721,304 @@ function updateDashboard() {
   renderTable();
   updatePaginationControls();
 }
+
+// NEW FUNCTION: Render Dashboard KPIs (New Format Element)
+function renderDashKPIs(data) {
+    const sum = key => data.reduce((s, d) => s + (d[key] || 0), 0);
+    const totalPOSValue = sum('posCash') + sum('posCard') + sum('posUpi');
+    const overallDifferenceValue = sum('overallDiff');
+    const totalExpenses = sum('expenses');
+
+    // Calculate Average Daily Sales
+    const dates = [...new Set(data.map(d => formatDate(d.date)))].filter(Boolean);
+    const numDays = dates.length || 1;
+    const avgDailySales = totalPOSValue / numDays;
+
+    // --- Color Logic ---
+    const overallDifferenceClass = overallDifferenceValue < 0 ? 'text-red-600' : 'text-green-600';
+
+const kpis = [
+  { title: 'Total POS Value', value: totalPOSValue, icon: 'trending-up', color: 'blue', isCurrency: false },
+  { title: 'Overall Difference', value: overallDifferenceValue, icon: 'arrow-left-right', color: overallDifferenceValue < 0 ? 'red' : 'green', isCurrency: false },
+  { title: 'Total Expenses', value: totalExpenses, icon: 'wallet', color: 'orange', isCurrency: false },
+  { title: 'Avg. Daily Sales', value: Math.round(avgDailySales), icon: 'calendar-check', color: 'purple', isCurrency: false }
+];
+
+    dashKpiGrid.innerHTML = kpis.map(k => {
+      const valueText = k.isCurrency ? `₹${k.value.toFixed(0).toLocaleString('en-IN')}` : `₹${k.value.toLocaleString('en-IN')}`;
+      const colorClass = `text-${k.color}-600`;
+      const bgColorClass = `bg-${k.color}-100`;
+
+      return `
+      <div class="kpi-card bg-white p-5 rounded-lg">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full ${bgColorClass} flex-shrink-0">
+            <i data-lucide="${k.icon}" class="w-6 h-6 ${colorClass}"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">${k.title}</p>
+            <p class="text-2xl font-bold ${colorClass}">${valueText}</p>
+          </div>
+        </div>
+      </div>
+    `}).join('');
+    lucide.createIcons();
+}
+
+// MODIFIED FUNCTION: Update Creative Dashboard (called by dash-search-button)
+function updateCreativeDashboard() {
+  const filteredData = applyFilterAndGetData(dashLocationFilterDropdown, dashFromDateFilter, dashToDateFilter);
+  
+  if (!filteredData) {
+    alert("Please select at least one location, a 'From Date', and a 'To Date' before searching the Dashboard.");
+    return;
+  }
+  
+  if (filteredData.length === 0) {
+    alert("No data available for the selected criteria to generate charts.");
+    dashInitialMessage.style.display = 'flex';
+    dashKpiGrid.innerHTML = ''; // Clear KPIs on no data
+    // Clear charts
+    if (paymentMethodChart) paymentMethodChart.destroy();
+    if (differenceBarChart) differenceBarChart.destroy();
+    if (salesTrendChart) salesTrendChart.destroy();
+    if (billsCountChart) billsCountChart.destroy(); // Clear new chart
+    return;
+  }
+  
+  dashInitialMessage.style.display = 'none';
+  renderDashKPIs(filteredData); // NEW KPI RENDER
+  renderCreativeDashboard(filteredData);
+}
+
+// NEW FUNCTION: Render Charts using Chart.js
+function renderCreativeDashboard(data) {
+    // 1. Calculate Metrics
+    const sum = key => data.reduce((s, d) => s + (d[key] || 0), 0);
+    
+    // Payment Method Split (Pie Chart Data)
+    const totalCash = sum('posCash');
+    const totalCard = sum('posCard');
+    const totalUpi = sum('posUpi');
+    
+    const paymentLabels = ['Card', 'Cash', 'UPI'];
+    const paymentData = [totalCard, totalCash, totalUpi];
+    const paymentColors = ['#2563eb', '#10b981', '#8b5cf6']; // blue, green, purple
+    
+    // Difference Bar Chart Data
+    const cashDiff = sum('cashDiff');
+    const cardDiff = sum('cardDiff');
+    const upiDiff = sum('upiDiff');
+    const differenceLabels = ['Cash Difference', 'Card Difference', 'UPI Difference'];
+    const differenceData = [cashDiff, cardDiff, upiDiff];
+    const differenceColors = differenceData.map(val => val < 0 ? '#ef4444' : '#10b981'); // red or green
+
+    // Sales Trend (Line Chart Data)
+    const salesByDate = data.reduce((acc, item) => {
+        const dateKey = formatDate(item.date);
+        if (!acc[dateKey]) acc[dateKey] = 0;
+        acc[dateKey] += item.posCash + item.posCard + item.posUpi;
+        return acc;
+    }, {});
+
+    const trendLabels = Object.keys(salesByDate).sort((a, b) => {
+        const [dA, mA, yA] = a.split('-').map(Number);
+        const [dB, mB, yB] = b.split('-').map(Number);
+        const dateA = new Date(yA, mA - 1, dA);
+        const dateB = new Date(yB, mB - 1, dB);
+        return dateA - dateB;
+    });
+    const trendData = trendLabels.map(label => salesByDate[label]);
+
+    // Bills Count Data (Bar Chart Data)
+    const billsByDate = data.reduce((acc, item) => {
+        const dateKey = formatDate(item.date);
+        // FIX: Sum the billCount property instead of counting the row (+1)
+        acc[dateKey] = (acc[dateKey] || 0) + (item.billCount || 0); 
+        return acc;
+    }, {});
+
+    const billsLabels = Object.keys(billsByDate).sort((a, b) => {
+        const [dA, mA, yA] = a.split('-').map(Number);
+        const [dB, mB, yB] = b.split('-').map(Number);
+        const dateA = new Date(yA, mA - 1, dA);
+        const dateB = new Date(yB, mB - 1, dB);
+        return dateA - dateB;
+    });
+    const billsData = billsLabels.map(label => billsByDate[label]);
+
+
+    // Helper function to destroy and recreate chart
+    const createChart = (chartInstance, ctx, config) => {
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+        return new Chart(ctx, config);
+    };
+
+    // 2. Render Charts
+    
+    // Payment Method Chart (Pie)
+    const paymentCtx = document.getElementById('payment-method-chart').getContext('2d');
+    const paymentConfig = {
+        type: 'doughnut', // Changed to doughnut for a different look
+        data: {
+            labels: paymentLabels,
+            datasets: [{
+                data: paymentData,
+                backgroundColor: paymentColors,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'right' },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed !== null) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const value = context.parsed;
+                                const percentage = total ? (value / total * 100).toFixed(1) + '%' : '0.0%';
+                                label += `₹${value.toLocaleString('en-IN')} (${percentage})`;
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    };
+    paymentMethodChart = createChart(paymentMethodChart, paymentCtx, paymentConfig);
+
+    // Difference Bar Chart (Bar)
+    const differenceCtx = document.getElementById('difference-bar-chart').getContext('2d');
+    const differenceConfig = {
+        type: 'bar',
+        data: {
+            labels: differenceLabels,
+            datasets: [{
+                label: 'Difference Value',
+                data: differenceData,
+                backgroundColor: differenceColors,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: false }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += `₹${context.parsed.y.toLocaleString('en-IN')}`;
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    };
+    differenceBarChart = createChart(differenceBarChart, differenceCtx, differenceConfig);
+
+    // Bills Count Chart (Bar)
+    const billsCtx = document.getElementById('bills-count-chart').getContext('2d');
+    const billsConfig = {
+        type: 'bar',
+        data: {
+            labels: billsLabels,
+            datasets: [{
+                label: 'No. of Bills',
+                data: billsData,
+                backgroundColor: '#2563eb', // blue-600
+                borderRadius: 4,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'No. of Bills'
+                    },
+                    ticks: {
+                        precision: 0 // Ensure y-axis shows whole numbers
+                    }
+                },
+                x: {
+                    grid: { display: false }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        title: (items) => items[0].label,
+                        label: (context) => `Bills: ${context.parsed.y.toLocaleString('en-IN')}`
+                    }
+                }
+            }
+        }
+    };
+    billsCountChart = createChart(billsCountChart, billsCtx, billsConfig);
+    
+    // Sales Trend Chart (Line)
+    const trendCtx = document.getElementById('sales-trend-chart').getContext('2d');
+    const trendConfig = {
+        type: 'line',
+        data: {
+            labels: trendLabels,
+            datasets: [{
+                label: 'Total POS Value',
+                data: trendData,
+                borderColor: '#1d4ed8', // blue-700
+                backgroundColor: 'rgba(29, 78, 216, 0.1)',
+                tension: 0.2, // Slight curve
+                fill: true,
+                pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += `₹${context.parsed.y.toLocaleString('en-IN')}`;
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    };
+    salesTrendChart = createChart(salesTrendChart, trendCtx, trendConfig);
+}
+
+// renderKpis (UNMODIFIED)
 function renderKpis(clear = false) {
   if (clear || !currentFilteredData.length) {
       kpiGrid.innerHTML = '';
@@ -455,7 +1044,7 @@ function renderKpis(clear = false) {
   const kpis = [
     { title: 'Total POS Value', value: totalPOSValue, icon: 'banknote' },
     { title: 'Total Settled', value: totalSettled, icon: 'landmark' },
-    { title: 'Total Expenses', value: sum('expenses'), icon: 'smartphone' },
+    { title: 'Total Expenses', value: sum('expenses'), icon: 'wallet' },
     // Apply the dynamic class to the Overall Difference
     { title: 'Overall Difference', value: overallDifferenceValue, icon: 'arrow-left-right', valueClass: overallDifferenceClass },
     { 
@@ -492,6 +1081,7 @@ function renderKpis(clear = false) {
   lucide.createIcons();
 }
 
+// renderTable (UNMODIFIED)
 function renderTable(clear = false) {
   const dataTableHead = document.getElementById('data-table-head');
   
@@ -592,6 +1182,7 @@ function renderTable(clear = false) {
   dataTableBody.innerHTML = dataRowsHtml;
 }
 
+// updatePaginationControls (UNMODIFIED)
 function updatePaginationControls() {
   if (currentFilteredData.length > ITEMS_PER_PAGE) {
     paginationControls.classList.remove('hidden');
@@ -604,37 +1195,59 @@ function updatePaginationControls() {
   }
 }
 
+// goToPage (UNMODIFIED)
 function goToPage(page) {
   currentPage = page;
   renderTable();
   updatePaginationControls();
 }
 
-function updateLocationButtonText() {
-    const selected = Array.from(document.querySelectorAll('#location-filter-dropdown input:checked'));
+// MODIFIED: updateLocationButtonText to handle both dropdowns
+function updateLocationButtonText(isDashboard = false) {
+    const dropdown = isDashboard ? dashLocationFilterDropdown : locationFilterDropdown;
+    const textElement = isDashboard ? dashLocationFilterText : locationFilterText;
+    
+    const selected = Array.from(dropdown.querySelectorAll('input:checked'));
     if (selected.length === 0) {
-        locationFilterText.textContent = 'Select Location(s)';
+        textElement.textContent = 'Select Location(s)';
     } else if (selected.length === 1) {
-        locationFilterText.textContent = selected[0].value;
+        textElement.textContent = selected[0].value;
     } else {
-        locationFilterText.textContent = `${selected.length} locations selected`;
+        textElement.textContent = `${selected.length} locations selected`;
     }
 }
 
+// MODIFIED: addEventListeners to include dashboard filter listeners AND hamburger menu
 function addEventListeners() {
   logoutButton.addEventListener('click', handleLogout);
   searchButton.addEventListener('click', updateDashboard);
   downloadCsvButton.addEventListener('click', downloadCSV);
   
+  // NEW: Hamburger Menu Listeners
+  menuButton.addEventListener('click', toggleSidebar);
+  sidebarOverlay.addEventListener('click', closeSidebar);
+  
+  // Reports Filter Listeners
   locationFilterButton.addEventListener('click', () => {
     locationFilterDropdown.classList.toggle('hidden');
   });
+  locationFilterDropdown.addEventListener('change', () => updateLocationButtonText(false));
 
-  locationFilterDropdown.addEventListener('change', updateLocationButtonText);
+  // NEW Dashboard Filter Listeners
+  dashSearchButton.addEventListener('click', updateCreativeDashboard);
+  dashLocationFilterButton.addEventListener('click', () => {
+    dashLocationFilterDropdown.classList.toggle('hidden');
+  });
+  dashLocationFilterDropdown.addEventListener('change', () => updateLocationButtonText(true));
 
   document.addEventListener('click', (event) => {
+    // Logic to close Reports dropdown
     if (!locationFilterContainer.contains(event.target)) {
       locationFilterDropdown.classList.add('hidden');
+    }
+    // NEW Logic to close Dashboard dropdown
+    if (!dashLocationFilterContainer.contains(event.target)) {
+      dashLocationFilterDropdown.classList.add('hidden');
     }
   });
 
@@ -644,9 +1257,31 @@ function addEventListeners() {
   nextPageButton.addEventListener('click', () => {
     if (currentPage < totalPages) goToPage(currentPage + 1);
   });
+  
+  // Navigation Link Event Listeners
+  navHome.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchSection(e.currentTarget.dataset.section);
+  });
+  navReports.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchSection(e.currentTarget.dataset.section);
+  });
+  navDashboard.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchSection(e.currentTarget.dataset.section);
+  });
+  
+  // NEW Home Screen Button Listeners
+  homeViewReportsButton.addEventListener('click', () => {
+      switchSection('reports-content');
+  });
+  homeViewDashboardButton.addEventListener('click', () => {
+      switchSection('dashboard-content');
+  });
 }
 
-// =========== DATA EXPORT ===========
+// =========== DATA EXPORT (UNMODIFIED) ===========
 function downloadCSV() {
   if (!currentFilteredData.length) { alert("No data to download. Please perform a search first."); return; }
   
@@ -687,7 +1322,7 @@ function downloadCSV() {
   document.body.removeChild(link);
 }
 
-// =========== APP INITIALIZATION ===========
+// =========== APP INITIALIZATION (UNMODIFIED) ===========
 document.addEventListener('DOMContentLoaded', () => {
     // Password show/hide toggle
 const passwordInput = document.getElementById('password');
@@ -702,12 +1337,7 @@ togglePasswordButton.addEventListener('click', () => {
   togglePasswordButton.innerHTML = `<i data-lucide="${isPasswordVisible ? 'eye-off' : 'eye'}" class="w-5 h-5"></i>`;
   lucide.createIcons();
 });
-
-// Attach event listeners for Login and Forgot Password
 loginForm.addEventListener('submit', handleLogin);
-if (forgotPasswordLink) {
-    forgotPasswordLink.addEventListener('click', handleForgotPassword);
-}
     
     auth.onAuthStateChanged(user => {
         if (user) {
