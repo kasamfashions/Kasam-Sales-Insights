@@ -15,7 +15,7 @@
 <style>
   /* ADD THIS LINE to reduce the base font size */
   html { 
-    font-size: 75.5%; /* Reduces 16px default to 14px (0.875rem) */
+    font-size: 70.5%; /* Reduces 16px default to 14px (0.875rem) */
   } 
   
   body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
@@ -35,7 +35,7 @@
 
   /* NEW STYLES FOR SIDEBAR & RESPONSIVENESS */
   .sidebar {
-    width: 250px; /* Fixed width for the sidebar */
+    width: 200px; /* Fixed width for the sidebar */
     flex-shrink: 0;
   }
   .nav-link {
@@ -167,7 +167,7 @@
                         </a>
                     </div>
                 </div>
-                <p id="login-error" class="text-sm text-red-600 hidden">Invalid Email or password. Please try again.</p>
+                <p id="login-error" class="text-sm text-red-600 hidden">Invalid Email or password. Please check your Email and password.</p>
 
                 <div>
                     <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
@@ -179,210 +179,255 @@
     </div>
 </div>
 
-
 <div id="dashboard-section" style="display: none;" class="min-h-screen flex flex-col">
-  
-  <header class="bg-white shadow-md flex-shrink-0">
-    <div class="px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-            <div class="flex items-center">
-                <button id="menu-button" class="lg:hidden p-2 mr-3 text-gray-500 hover:text-gray-900">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
-                </button>
-                
-                 <img src="https://www.dropbox.com/scl/fi/vmprhd0i0781yytkkukfg/Untitled-Kasam-Sales-Insights.png?rlkey=hazshd3m3mkftjssizqfzpmw3&st=f00pivkz&raw=1" 
-                 alt="Kasam Sales Insights Logo" 
-                 class="h-20 w-auto mr-4 object-contain mt-4"> 
-                <h1 class="text-xl font-extrabold text-gray-800 mt-4">Kasam Fashions Private Limited</h1>
-            </div>
-            </div>
-    </div>
-</header>
-  
-  <div class="flex flex-1 overflow-hidden">
-    
-    <div id="sidebar-wrapper" class="sidebar-wrapper lg:static lg:block">
-        <aside class="sidebar bg-white border-r border-gray-200 p-4 h-full overflow-y-auto">
-            <div class="flex flex-col h-full">
-                <div class="space-y-1 flex-grow">
-                    <a href="#" id="nav-home" data-section="welcome-home-screen" class="nav-link active">
-                        <i data-lucide="home" class="w-5 h-5 mr-3"></i>
-                        Home
-                    </a>
-                    <a href="#" id="nav-reports" data-section="reports-content" class="nav-link">
-                        <i data-lucide="file-text" class="w-5 h-5 mr-3"></i>
-                        Reports
-                    </a>
-                    <a href="#" id="nav-dashboard" data-section="dashboard-content" class="nav-link">
-                        <i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i>
-                        Dashboard
-                    </a>
-                </div>
-                
-                <div class="mt-auto pt-4 border-t border-gray-200">
-                    <button id="logout-button" class="w-full flex items-center justify-start gap-3 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700">
-                        <i data-lucide="log-out" class="w-4 h-4"></i>
-                        <span>Logout</span>
-                    </button>
-                </div>
-            </div>
-        </aside>
-    </div>
-    <div id="sidebar-overlay" class="sidebar-overlay"></div>
 
-    <main id="main-content-wrapper" class="p-4 sm:p-6 lg:p-8 overflow-y-auto w-full min-h-[calc(100vh-64px)]">
-        
-       <div id="welcome-home-screen" style="display: block;" class="flex flex-col items-center justify-center p-12 h-full w-full bg-white rounded-lg shadow">
-          <div class="w-full flex">
-          </div><img src="https://www.dropbox.com/scl/fi/likr2k1anulu772755g7z/Untitled-Kasam-Sales-Insights-2.png?rlkey=prducnpxfwdit2jwpy292lygv&st=m5lthzcx&raw=1" 
-       alt="Kasam Sales Insights Logo" 
-         alt="Kasam Sales Insights Logo"
-             class="h-60 w-auto mt-32 mb-4 object-contain ml-auto mr-auto opacity-50">
-    <h2 class="text-4xl font-bold text-gray-800 mb-4 ml-24 text-center">Welcome to Kasam Sales Insights</h2>
-    <p class="text-xl text-gray-600 mb-4 ml-24 text-center">Use the navigation panel to view reports, track sales trends, and analyze payment differences of the stores.</p>
-</div>
-        <div id="dashboard-content" class="hidden relative">
+    <div id="skeleton-loader" class="h-screen flex">
+        <div class="w-64 bg-white p-4 flex flex-col space-y-6 animate-pulse border-r border-gray-200 flex-shrink-0 hidden lg:block">
+            <div class="h-10 bg-gray-200 rounded w-full mt-4"></div>
+            <div class="h-px bg-gray-200"></div>
+            <div class="space-y-4 pt-4">
+                <div class="h-8 bg-gray-200 rounded w-11/12"></div>
+                <div class="h-8 bg-gray-200 rounded w-11/12"></div>
+                <div class="h-8 bg-gray-200 rounded w-11/12"></div>
+            </div>
+            <div class="mt-auto space-y-3 p-2 border-t border-gray-100">
+                <div class="mt-15 bg-red-200 rounded w-full"></div>
+            </div>
+        </div>
+
+        <div class="flex-1 flex flex-col overflow-hidden bg-gray-100 animate-pulse">
             
-            <div class="mb-6 p-4 bg-white rounded-lg shadow">
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
-                    <div class="md:col-span-1">
-                        <label for="dash-location-filter-button" class="block text-sm font-medium text-gray-700">Location(s)</label>
-                        <div class="relative" id="dash-location-filter-container">
-                            <button id="dash-location-filter-button" class="mt-1 w-full border border-gray-300 rounded-md p-2 bg-white text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <span id="dash-location-filter-text" class="truncate">Select Location(s)</span>
-                                <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i>
+            <div class="h-16 bg-white shadow-md p-4 flex items-center justify-between border-b border-gray-200 flex-shrink-0">
+                <div class="h-12 bg-gray-200 rounded w-60"></div>
+                <div class="flex space-x-4">
+                    <div class="mt-24 mb-8 w-10 bg-gray-200 rounded-full"></div>
+                </div>
+            </div>
+
+            <main class="flex-1 overflow-x-hidden overflow-y-auto p-8 space-y-8">
+                
+                <div id="home-skeleton" class="flex flex-col items-center justify-center p-12 h-[75vh] w-full bg-white rounded-lg shadow">
+                    
+                    <div class="h-60 w-60 bg-gray-200 rounded-full mb-8 opacity-50"></div>
+
+                    <div class="h-10 bg-gray-300 rounded w-1/2 mb-4"></div>
+                    
+                    <div class="w-full max-w-lg space-y-3">
+                        <div class="h-4 bg-gray-200 rounded w-full"></div>
+                        <div class="h-4 bg-gray-200 rounded w-11/12"></div>
+                        <div class="h-4 bg-gray-200 rounded w-5/6 mx-auto"></div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <div id="app-content" class="hidden min-h-screen flex flex-col w-full">
+
+        <header class="bg-white shadow-md flex-shrink-0">
+            <div class="px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <button id="menu-button" class="lg:hidden p-2 mr-3 text-gray-500 hover:text-gray-900">
+                            <i data-lucide="menu" class="w-6 h-6"></i>
+                        </button>
+                        
+                        <img src="https://www.dropbox.com/scl/fi/vmprhd0i0781yytkkukfg/Untitled-Kasam-Sales-Insights.png?rlkey=hazshd3m3mkftjssizqfzpmw3&st=f00pivkz&raw=1" 
+                        alt="Kasam Sales Insights Logo" 
+                        class="h-20 w-auto mr-4 object-contain mt-4"> 
+                        <h1 class="text-xl font-extrabold text-gray-800 mt-4">Kasam Fashions Private Limited</h1>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="flex flex-1 overflow-hidden">
+            
+            <div id="sidebar-wrapper" class="sidebar-wrapper lg:static lg:block">
+                <aside class="sidebar bg-white border-r border-gray-200 p-4 h-full overflow-y-auto">
+                    <div class="flex flex-col h-full">
+                        <div class="space-y-1 flex-grow">
+                            <a href="#" id="nav-home" data-section="welcome-home-screen" class="nav-link active">
+                                <i data-lucide="home" class="w-5 h-5 mr-3"></i>
+                                Home
+                            </a>
+                            <a href="#" id="nav-reports" data-section="reports-content" class="nav-link">
+                                <i data-lucide="file-text" class="w-5 h-5 mr-3"></i>
+                                Reports
+                            </a>
+                            <a href="#" id="nav-dashboard" data-section="dashboard-content" class="nav-link">
+                                <i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i>
+                                Dashboard
+                            </a>
+                        </div>
+                        
+                        <div class="mt-auto pt-4 border-t border-gray-200">
+                            <button id="logout-button" class="w-full flex items-center justify-start gap-3 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700">
+                                <i data-lucide="log-out" class="w-4 h-4"></i>
+                                <span>Logout</span>
                             </button>
-                            <div id="dash-location-filter-dropdown" class="hidden absolute z-20 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto p-2 space-y-1">
+                        </div>
+                    </div>
+                </aside>
+            </div>
+            <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+            <main id="main-content-wrapper" class="p-4 sm:p-6 lg:p-8 overflow-y-auto w-full min-h-[calc(100vh-64px)]">
+                
+                <div id="welcome-home-screen" style="display: block;" class="flex flex-col items-center justify-center p-12 h-full w-full bg-white rounded-lg shadow">
+                    <div class="w-full flex">
+                    </div><img src="https://www.dropbox.com/scl/fi/likr2k1anulu772755g7z/Untitled-Kasam-Sales-Insights-2.png?rlkey=prducnpxfwdit2jwpy292lygv&st=m5lthzcx&raw=1" 
+                    alt="Kasam Sales Insights Logo" 
+                    alt="Kasam Sales Insights Logo"
+                        class="h-60 w-auto mt-32 mb-4 object-contain ml-auto mr-auto opacity-50">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4 ml-24 text-center">Welcome to Kasam Sales Insights</h2>
+                    <p class="text-xl text-gray-600 mb-4 ml-24 text-center">Use the navigation panel to view reports, track sales trends, and analyze payment differences of the stores.</p>
+                </div>
+
+                <div id="dashboard-content" class="hidden relative">
+                    
+                    <div class="mb-6 p-4 bg-white rounded-lg shadow">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
+                            <div class="md:col-span-1">
+                                <label for="dash-location-filter-button" class="block text-sm font-medium text-gray-700">Location(s)</label>
+                                <div class="relative" id="dash-location-filter-container">
+                                    <button id="dash-location-filter-button" class="mt-1 w-full border border-gray-300 rounded-md p-2 bg-white text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <span id="dash-location-filter-text" class="truncate">Select Location(s)</span>
+                                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i>
+                                    </button>
+                                    <div id="dash-location-filter-dropdown" class="hidden absolute z-20 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto p-2 space-y-1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="md:col-span-1">
+                                <label for="dash-from-date-filter" class="block text-sm font-medium text-gray-700">From Date</label>
+                                <input type="date" id="dash-from-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="md:col-span-1">
+                                <label for="dash-to-date-filter" class="block text-sm font-medium text-gray-700">To Date</label>
+                                <input type="date" id="dash-to-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="md:col-span-1">
+                                <button id="dash-search-button" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">
+                                <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                                <span>Search Dashboard</span>
+                                </button>
+                            </div>
+                            <div class="md:col-span-1"></div> 
+                        </div>
+                    </div>
+
+                    <div id="dash-kpi-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                        </div>
+
+                    <div id="chart-area-wrapper" class="relative">
+
+                        <div id="charts-container" class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8">
+            <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-1">
+                <h3 class="text-lg font-semibold mb-4  text-gray-800">Payment Method Contribution (POS Value)</h3>
+                <div class="relative min-h-[300px] flex items-center justify-center">
+                    <canvas id="payment-method-chart"></canvas>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-1">
+                <h3 class="text-lg font-semibold mb-4 text-gray-800">Difference in Card/Card and UPI</h3>
+                <div class="relative min-h-[300px] flex items-center justify-center">
+                    <canvas id="difference-bar-chart"></canvas>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-1">
+                <h3 class="text-lg font-semibold mb-4 text-gray-800">No. of bills</h3>
+                <div class="relative min-h-[300px] flex items-center justify-center">
+                    <canvas id="bills-count-chart"></canvas>
+                </div>
+            </div>
+                            <div class="lg:col-span-3 bg-white p-6 rounded-lg shadow-md min-h-[400px]">
+                                <h3 class="text-lg font-semibold mb-4 text-gray-800">Sales Trend (Overall POS Value)</h3>
+                                <div class="relative h-96">
+                                    <canvas id="sales-trend-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="dash-initial-message" class="absolute top-0 left-0 right-0 bottom-0 w-full h-full flex flex-col items-center justify-center bg-white/100 rounded-lg shadow" style="display: flex;">
+                        <i data-lucide="bar-chart-3" class="h-20 w-20 text-blue-400 mb-4"></i>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Build Your Dashboard!</h2>
+                        <p class="text-gray-600 text-lg">Select filters above and click 'Search Dashboard' to generate charts.</p>
+                    </div>
+
+                    </div> 
+                </div>
+                
+                <div id="reports-content" style="display: none;">
+                    <div class="mb-6 p-4 bg-white rounded-lg shadow">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
+                            <div class="md:col-span-1">
+                                <label for="location-filter-button" class="block text-sm font-medium text-gray-700">Location(s)</label>
+                                <div class="relative" id="location-filter-container">
+                                    <button id="location-filter-button" class="mt-1 w-full border border-gray-300 rounded-md p-2 bg-white text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <span id="location-filter-text" class="truncate">Select Location(s)</span>
+                                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i>
+                                    </button>
+                                    <div id="location-filter-dropdown" class="hidden absolute z-20 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto p-2 space-y-1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="md:col-span-1">
+                                <label for="from-date-filter" class="block text-sm font-medium text-gray-700">From Date</label>
+                                <input type="date" id="from-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="md:col-span-1">
+                                <label for="to-date-filter" class="block text-sm font-medium text-gray-700">To Date</label>
+                                <input type="date" id="to-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="md:col-span-1">
+                                <button id="search-button" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                                <i data-lucide="search" class="w-4 h-4"></i>
+                                <span>Search</span>
+                                </button>
+                            </div>
+                            <div id="download-container" class="md:col-span-1">
+                                <button id="download-csv" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700">
+                                <i data-lucide="download" class="w-4 h-4"></i>
+                                <span>Download CSV</span>
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <div class="md:col-span-1">
-                        <label for="dash-from-date-filter" class="block text-sm font-medium text-gray-700">From Date</label>
-                        <input type="date" id="dash-from-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div class="md:col-span-1">
-                        <label for="dash-to-date-filter" class="block text-sm font-medium text-gray-700">To Date</label>
-                        <input type="date" id="dash-to-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div class="md:col-span-1">
-                        <button id="dash-search-button" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">
-                        <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-                        <span>Search Dashboard</span>
-                        </button>
-                    </div>
-                    <div class="md:col-span-1"></div> 
-                </div>
-            </div>
 
-            <div id="dash-kpi-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                </div>
+                    <div id="kpi-grid" class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5 mb-6"></div>
 
-            <div id="chart-area-wrapper" class="relative">
-
-                <div id="charts-container" class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8">
-    <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-1">
-        <h3 class="text-lg font-semibold mb-4 text-gray-800">Payment Method Contribution (POS Value)</h3>
-        <div class="relative min-h-[300px] flex items-center justify-center">
-            <canvas id="payment-method-chart"></canvas>
-        </div>
-    </div>
-    <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-1">
-        <h3 class="text-lg font-semibold mb-4 text-gray-800">Difference in Card/Card and UPI</h3>
-        <div class="relative min-h-[300px] flex items-center justify-center">
-            <canvas id="difference-bar-chart"></canvas>
-        </div>
-    </div>
-    <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-1">
-        <h3 class="text-lg font-semibold mb-4 text-gray-800">No. of bills</h3>
-        <div class="relative min-h-[300px] flex items-center justify-center">
-            <canvas id="bills-count-chart"></canvas>
-        </div>
-    </div>
-                    <div class="lg:col-span-3 bg-white p-6 rounded-lg shadow-md min-h-[400px]">
-                        <h3 class="text-lg font-semibold mb-4 text-gray-800">Sales Trend (Overall POS Value)</h3>
-                        <div class="relative h-96">
-                            <canvas id="sales-trend-chart"></canvas>
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                            <thead id="data-table-head" class="bg-gray-50" style="position: sticky; top: 0; z-index: 20;">
+                            </thead>
+                            <tbody id="data-table-body" class="bg-white divide-y divide-gray-200">
+                            </tbody>
+                            </table>
                         </div>
-                    </div>
-                </div>
-
-                <div id="dash-initial-message" class="absolute top-0 left-0 right-0 bottom-0 w-full h-full flex flex-col items-center justify-center bg-white/100 rounded-lg shadow" style="display: flex;">
-                <i data-lucide="bar-chart-3" class="h-20 w-20 text-blue-400 mb-4"></i>
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">Build Your Dashboard!</h2>
-                <p class="text-gray-600 text-lg">Select filters above and click 'Search Dashboard' to generate charts.</p>
-            </div>
-
-            </div> </div>
-        
-        <div id="reports-content" style="display: none;">
-            <div class="mb-6 p-4 bg-white rounded-lg shadow">
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
-                    <div class="md:col-span-1">
-                        <label for="location-filter-button" class="block text-sm font-medium text-gray-700">Location(s)</label>
-                        <div class="relative" id="location-filter-container">
-                            <button id="location-filter-button" class="mt-1 w-full border border-gray-300 rounded-md p-2 bg-white text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <span id="location-filter-text" class="truncate">Select Location(s)</span>
-                                <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i>
+                        <div id="no-data-message" class="hidden text-center py-16 px-4">
+                            <i data-lucide="search-x" class="mx-auto h-12 w-12 text-gray-400"></i>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">No Data Available</h3>
+                            <p class="mt-1 text-sm text-gray-500">There is no sales data for the selected criteria. Please adjust your filters and click "Search".</p>
+                        </div>
+                        <div id="pagination-controls" class="flex justify-between items-center px-4 py-3 border-t border-gray-200 bg-gray-50 hidden">
+                            <button id="prev-page-button" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                            Previous
                             </button>
-                            <div id="location-filter-dropdown" class="hidden absolute z-20 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto p-2 space-y-1">
-                            </div>
+                            <span class="text-sm text-gray-700">Page <span id="current-page">1</span> of <span id="total-pages">1</span></span>
+                            <button id="next-page-button" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                            Next
+                            </button>
                         </div>
                     </div>
-                    <div class="md:col-span-1">
-                        <label for="from-date-filter" class="block text-sm font-medium text-gray-700">From Date</label>
-                        <input type="date" id="from-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div class="md:col-span-1">
-                        <label for="to-date-filter" class="block text-sm font-medium text-gray-700">To Date</label>
-                        <input type="date" id="to-date-filter" class="block w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div class="md:col-span-1">
-                        <button id="search-button" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                        <i data-lucide="search" class="w-4 h-4"></i>
-                        <span>Search</span>
-                        </button>
-                    </div>
-                    <div id="download-container" class="md:col-span-1">
-                        <button id="download-csv" class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700">
-                        <i data-lucide="download" class="w-4 h-4"></i>
-                        <span>Download CSV</span>
-                        </button>
-                    </div>
                 </div>
-            </div>
-
-            <div id="kpi-grid" class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5 mb-6"></div>
-
-            <div class="bg-white rounded-lg shadow overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                    <thead id="data-table-head" class="bg-gray-50" style="position: sticky; top: 0; z-index: 20;">
-                    </thead>
-                    <tbody id="data-table-body" class="bg-white divide-y divide-gray-200">
-                    </tbody>
-                    </table>
-                </div>
-                <div id="no-data-message" class="hidden text-center py-16 px-4">
-                    <i data-lucide="search-x" class="mx-auto h-12 w-12 text-gray-400"></i>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No Data Available</h3>
-                    <p class="mt-1 text-sm text-gray-500">There is no sales data for the selected criteria. Please adjust your filters and click "Search".</p>
-                </div>
-                <div id="pagination-controls" class="flex justify-between items-center px-4 py-3 border-t border-gray-200 bg-gray-50 hidden">
-                    <button id="prev-page-button" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
-                    Previous
-                    </button>
-                    <span class="text-sm text-gray-700">Page <span id="current-page">1</span> of <span id="total-pages">1</span></span>
-                    <button id="next-page-button" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
-                    Next
-                    </button>
-                </div>
-            </div>
+                
+            </main>
         </div>
-        
-    </main>
-  </div>
+    </div>
 </div>
-
 <div id="loading-overlay" class="hidden fixed inset-0 bg-white bg-opacity-75 z-50 flex items-center justify-center">
   <div class="flex items-center gap-2">
     <svg class="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -396,7 +441,7 @@
 <script>
 // =========== CONFIGURATION & CONSTANTS ===========
 const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbwVGCl3OP2_yBiumCfkbMk5Tygyyv6gyZ8REKqvvM3I0v7BsN5sce7OUlaxxRkEYnLR/exec';
-const ITEMS_PER_PAGE = 15; 
+const ITEMS_PER_PAGE = 10; 
 const firebaseConfig = {
   apiKey: "AIzaSyBjEyPKt25-Tl3EwBJuXrZjTL9I1D74T88",
   authDomain: "kasam-sales-insight.firebaseapp.com",
@@ -481,6 +526,10 @@ const menuButton = document.getElementById('menu-button');
 const sidebarWrapper = document.getElementById('sidebar-wrapper');
 const sidebarOverlay = document.getElementById('sidebar-overlay');
 
+// NEW: SKELETON SELECTORS
+const skeletonLoader = document.getElementById('skeleton-loader');
+const appContent = document.getElementById('app-content');
+
 
 // =========== LOGIN & AUTHENTICATION (UNMODIFIED) ===========
 async function handleLogin(event) {
@@ -509,20 +558,28 @@ async function handleLogout() {
     }
 }
 
+// MODIFIED: Show skeleton on initial dashboard entry
 function showDashboard() {
     loginSection.style.display = 'none';
-    dashboardSection.style.display = 'flex'; // Changed to flex to support sidebar
+    dashboardSection.style.display = 'flex'; 
+    
+    // Show skeleton and hide actual content initially
+    skeletonLoader.classList.remove('hidden'); 
+    appContent.classList.add('hidden'); 
     
     if (!isDashboardInitialized) {
         initializeDashboard();
         isDashboardInitialized = true;
     }
-    // Set 'Home' as the default view on login
+    // Set 'Home' as the default view on login (will run once content is visible)
     switchSection('welcome-home-screen');
 }
 
 // MODIFIED: Handles navigation between sections & closes sidebar
 function switchSection(sectionId) {
+    // Only switch if the actual content is visible (i.e., not the skeleton)
+    if (appContent.classList.contains('hidden')) return;
+
     // Hide all main content sections
     reportsContent.style.display = 'none';
     dashboardContent.style.display = 'none'; // Renamed element
@@ -607,8 +664,9 @@ function parseSheetDate(dateString) {
 }
 
 // =========== CORE DASHBOARD FUNCTIONS ===========
+// MODIFIED: Toggle skeleton/app content visibility
 async function initializeDashboard() {
-  loadingOverlay.classList.remove('hidden');
+  // loadingOverlay.classList.remove('hidden'); // Removed: Skeleton replaces initial overlay
   try {
     await fetchSalesData();
     populateFilters();
@@ -621,8 +679,13 @@ async function initializeDashboard() {
     console.error("Failed to initialize:", err);
     alert("Could not load data from Google Sheets. Check your Apps Script URL, sheet name, and column headers.");
   } finally {
-    loadingOverlay.classList.add('hidden');
+    // Hide Skeleton and Show Actual Content
+    skeletonLoader.classList.add('hidden');
+    appContent.classList.remove('hidden');
+
     lucide.createIcons();
+    // Set 'Home' as the default view on load completion
+    switchSection('welcome-home-screen');
   }
 }
 
@@ -741,7 +804,7 @@ function renderDashKPIs(data) {
     const overallDifferenceClass = overallDifferenceValue < 0 ? 'text-red-600' : 'text-green-600';
 
 const kpis = [
-  { title: 'Total POS Value', value: totalPOSValue, icon: 'trending-up', color: 'blue', isCurrency: false },
+  { title: 'Total POS Value', value: totalPOSValue, icon: 'banknote', color: 'blue', isCurrency: false },
   { title: 'Overall Difference', value: overallDifferenceValue, icon: 'arrow-left-right', color: overallDifferenceValue < 0 ? 'red' : 'green', isCurrency: false },
   { title: 'Total Expenses', value: totalExpenses, icon: 'wallet', color: 'orange', isCurrency: false },
   { title: 'Avg. Daily Sales', value: Math.round(avgDailySales), icon: 'calendar-check', color: 'purple', isCurrency: false }
@@ -1057,7 +1120,6 @@ function renderKpis(clear = false) {
         <span class="text-green-600 font-semibold">Cash ${cashPerc}%</span>  
         <span class="text-purple-600 font-semibold">UPI ${upiPerc}%</span>
       `, 
-      icon: 'pie-chart',
       isHTML: true
     }
   ];
@@ -1276,10 +1338,10 @@ function addEventListeners() {
   });
   
   // NEW Home Screen Button Listeners
-  homeViewReportsButton.addEventListener('click', () => {
+  homeViewReportsButton?.addEventListener('click', () => {
       switchSection('reports-content');
   });
-  homeViewDashboardButton.addEventListener('click', () => {
+  homeViewDashboardButton?.addEventListener('click', () => {
       switchSection('dashboard-content');
   });
 }
@@ -1355,4 +1417,3 @@ loginForm.addEventListener('submit', handleLogin);
 </script>
 </body>
 </html>
-
