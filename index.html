@@ -15,7 +15,7 @@
 <style>
   /* ADD THIS LINE to reduce the base font size */
   html { 
-    font-size: 75.5%; /* Reduces 16px default to 14px (0.875rem) */
+    font-size: 87.5%; /* Reduces 16px default to 14px (0.875rem) */
   } 
   
   body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
@@ -232,17 +232,15 @@
 
     <main id="main-content-wrapper" class="p-4 sm:p-6 lg:p-8 overflow-y-auto w-full min-h-[calc(100vh-64px)]">
         
-        <div id="welcome-home-screen" style="display: block;" class="flex flex-col items-center justify-center p-12 h-full bg-white rounded-lg shadow">
-            <img src="https://www.dropbox.com/scl/fi/vmprhd0i0781yytkkukfg/Untitled-Kasam-Sales-Insights.png?rlkey=hazshd3m3mkftjssizqfzpmw3&st=f00pivkz&raw=1" 
-                 alt="Kasam Sales Insights Logo" 
-                 class="h-60 w-auto mb-6 object-contain"> 
-            <h2 class="text-4xl font-bold text-gray-800 mb-4">Welcome to Kasam Sales Insights</h2>
-            <p class="text-xl text-gray-600 max-w-2xl text-center">Use the navigation panel to view reports, track sales trends, and analyze payment differences.</p>
-            <div class="mt-8 flex space-x-4">
-                <button id="home-view-reports" class="px-6 py-3 text-lg font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700">View Reports</button>
-                <button id="home-view-dashboard" class="px-6 py-3 text-lg font-semibold text-white bg-purple-600 rounded-md hover:bg-purple-700">View Dashboard</button>
-            </div>
-        </div>
+       <div id="welcome-home-screen" style="display: block;" class="flex flex-col items-center justify-center p-12 h-full w-full bg-white rounded-lg shadow">
+          <div class="w-full flex">
+          </div><img src="https://www.dropbox.com/scl/fi/likr2k1anulu772755g7z/Untitled-Kasam-Sales-Insights-2.png?rlkey=prducnpxfwdit2jwpy292lygv&st=m5lthzcx&raw=1" 
+       alt="Kasam Sales Insights Logo" 
+         alt="Kasam Sales Insights Logo"
+             class="h-60 w-auto mt-32 mb-4 object-contain ml-auto mr-auto opacity-50">
+    <h2 class="text-4xl font-bold text-gray-800 mb-4 ml-24 text-center">Welcome to Kasam Sales Insights</h2>
+    <p class="text-xl text-gray-600 mb-4 ml-24 text-center">Use the navigation panel to view reports, track sales trends, and analyze payment differences of the stores.</p>
+</div>
         <div id="dashboard-content" class="hidden relative">
             
             <div class="mb-6 p-4 bg-white rounded-lg shadow">
@@ -1357,5 +1355,3 @@ loginForm.addEventListener('submit', handleLogin);
 </script>
 </body>
 </html>
-
-
