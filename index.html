@@ -1177,38 +1177,38 @@ function renderTable(clear = false) {
 
   const totalsRowHtml = `
     <tr class="total-row">
-      <td class="px-6 py-4 text-sm font-bold">TOTALS</td>
-      <td class="px-6 py-4 text-sm font-bold">-</td>
-      <td class="px-6 py-4 text-sm font-bold">₹${totals.posCash.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm font-bold">₹${totals.depositedCash.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm font-bold">₹${totals.expenses.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm font-bold ${totalCashClass}">₹${totals.cashDiff.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm font-bold">₹${totals.posCard.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm font-bold">₹${totals.cardSettled.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm font-bold ${totalCardClass}">₹${totals.cardDiff.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm font-bold">₹${totals.posUpi.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm font-bold">₹${totals.upiSettled.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm font-bold ${totalUpiClass}">₹${totals.upiDiff.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-xl font-bold ${totalOverallClass}">₹${totals.overallDiff.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm font-bold">-</td>
+      <td class="px-6 py-4 text-center text-sm font-bold">TOTALS</td>
+      <td class="px-6 py-4 text-center text-sm font-bold">-</td>
+      <td class="px-6 py-4 text-center text-sm font-bold">₹${totals.posCash.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm font-bold">₹${totals.depositedCash.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm font-bold">₹${totals.expenses.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm font-bold ${totalCashClass}">₹${totals.cashDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm font-bold">₹${totals.posCard.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm font-bold">₹${totals.cardSettled.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm font-bold ${totalCardClass}">₹${totals.cardDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm font-bold">₹${totals.posUpi.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm font-bold">₹${totals.upiSettled.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm font-bold ${totalUpiClass}">₹${totals.upiDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-xl font-bold ${totalOverallClass}">₹${totals.overallDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm font-bold">-</td>
     </tr>
   `;
 
   const headerRowHtml = `
     <tr>
-      <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Store</th>
-      <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-      <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">POS Cash</th>
-      <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Deposited Cash</th>
-      <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Expenses / Discounts</th>
-      <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Cash Diff</th>
-      <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">POS Card</th>
-      <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Card Settled</th>
-      <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Card Diff</th>
-      <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">POS UPI</th>
-      <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">UPI Settled</th>
-      <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">UPI Diff</th>
-      <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Overall Difference</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Store</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">POS Cash</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Deposited Cash</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Expenses / Discounts</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Cash Diff</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">POS Card</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Card Settled</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Card Diff</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">POS UPI</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">UPI Settled</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">UPI Diff</th>
+      <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Overall Difference</th>
       <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Remarks</th>
     </tr>
   `;
@@ -1226,19 +1226,19 @@ function renderTable(clear = false) {
 
     return `
     <tr class="hover:bg-gray-50">
-      <td class="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">${d.store}</td>
-      <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">${formatDate(d.date)}</td>
-      <td class="px-6 py-4 text-sm text-gray-600">₹${d.posCash.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm text-gray-600">₹${d.depositedCash.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm text-gray-600">₹${d.expenses.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm ${cashClass}">₹${d.cashDiff.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm text-gray-600">₹${d.posCard.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm text-gray-600">₹${d.cardSettled.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm ${cardClass}">₹${d.cardDiff.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm text-gray-600">₹${d.posUpi.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm text-gray-600">₹${d.upiSettled.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-sm ${upiClass}">₹${d.upiDiff.toLocaleString('en-IN')}</td>
-      <td class="px-6 py-4 text-xl font-semibold ${overallClass}">₹${d.overallDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm text-gray-600 whitespace-nowrap">${d.store}</td>
+      <td class="px-6 py-4 text-center text-sm font-medium text-gray-900 whitespace-nowrap">${formatDate(d.date)}</td>
+      <td class="px-6 py-4 text-center text-sm text-gray-600">₹${d.posCash.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm text-gray-600">₹${d.depositedCash.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm text-gray-600">₹${d.expenses.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm ${cashClass}">₹${d.cashDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm text-gray-600">₹${d.posCard.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm text-gray-600">₹${d.cardSettled.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm ${cardClass}">₹${d.cardDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm text-gray-600">₹${d.posUpi.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm text-gray-600">₹${d.upiSettled.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-sm ${upiClass}">₹${d.upiDiff.toLocaleString('en-IN')}</td>
+      <td class="px-6 py-4 text-center text-xl font-semibold ${overallClass}">₹${d.overallDiff.toLocaleString('en-IN')}</td>
       <td class="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">${d.remarks || '-'}</td>
     </tr>
     `;
