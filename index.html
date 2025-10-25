@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
       html { 
-        font-size: 75.5%;
+        font-size: 80.5%;
       } 
       body { 
         font-family: 'Inter', sans-serif; 
@@ -56,8 +56,8 @@
         /* Change to sticky for larger screens to allow scrolling with content */
         .sidebar-wrapper {
             position: sticky;
-            top: 0; /* Sticks to the top of the viewport */
-            height: 100vh; /* Use viewport height to fill the screen vertically */
+            top: 3px; /* <--- CHANGED: Increased the top offset to move it further down */
+            height: calc(100vh - 6px); /* <--- CHANGED: Adjusted height to account for the larger top and bottom gap (40px top + 40px bottom) */
             transform: translateX(0);
         }
         .sidebar-overlay {
@@ -116,8 +116,7 @@
             </header>
 
             <div class="flex flex-1">
-                <div id="sidebar-wrapper" class="sidebar-wrapper w-56 bg-white border-r border-gray-200 p-4 z-40 flex-shrink-0">
-                    <aside class="flex flex-col h-full">
+                <div id="sidebar-wrapper" class="sidebar-wrapper w-56 bg-white border-r border-gray-200 p-4 z-40 flex-shrink-0 lg:my-8 lg:rounded-lg"> <aside class="flex flex-col h-full">
                         <div class="flex items-center justify-between lg:hidden mb-4">
                             <span class="font-bold text-lg">Menu</span>
                             <button id="sidebar-close-button" class="p-1"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -132,10 +131,10 @@
                 <div id="sidebar-overlay" class="sidebar-overlay"></div>
                 
                 <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto flex flex-col">
-                    <div id="page-home" class="page-content flex-1 bg-white rounded-lg shadow flex flex-col items-center justify-center p-6 sm:p-12">
-                        <img src="https://www.dropbox.com/scl/fi/qovbx5eogzklebun582ln/Sales.png?rlkey=x6pp38je3j7eclrrspl6xh3l7&st=f1ayft52&raw=1" alt="Kasam Sales Insights Logo" class="h-40 sm:h-60 w-auto mb-4 object-contain opacity-100" />
-                        <h2 class="text-2xl sm:text-4xl font-bold text-gray-800 mb-4 text-center">Welcome to Kasam Sales Insights</h2>
-                        <p class="text-base sm:text-xl text-gray-600 max-w-2xl text-center">Use the navigation panel to view reports, track sales trends, and analyze payment differences of the stores.</p>
+                    <div id="page-home" class="page-content flex-1 bg-white rounded-lg shadow flex flex-col items-center justify-start p-6 sm:p-12">
+                        <img src="https://www.dropbox.com/scl/fi/qovbx5eogzklebun582ln/Sales.png?rlkey=x6pp38je3j7eclrrspl6xh3l7&st=f1ayft52&raw=1" alt="Kasam Sales Insights Logo" class="h-40 sm:h-50 w-auto mb-4 object-contain opacity-100" />
+                        <h2 class="text-2xl sm:text-2xl font-bold text-gray-800 mb-4 text-center">Welcome to Kasam Sales Insights</h2>
+                        <p class="text-base sm:text-lg text-gray-600 max-w-2xl text-center">Use the navigation panel to view reports, track sales trends, and analyze payment differences of the stores.</p>
                     </div>
 
                     <div id="page-reports" class="page-content hidden flex-1">
@@ -666,4 +665,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
-
