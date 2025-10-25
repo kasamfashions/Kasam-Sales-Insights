@@ -26,9 +26,9 @@
         transform: translateY(-5px); 
         box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); 
       }
-      /* Sidebar Styles */
+      /* Sidebar Styles - UPDATED FOR STICKY POSITIONING */
       .sidebar-wrapper {
-        position: fixed;
+        position: fixed; /* Keep fixed for mobile slide-in */
         top: 0;
         left: 0;
         height: 100%;
@@ -53,8 +53,11 @@
         visibility: visible;
       }
       @media (min-width: 1024px) { /* lg breakpoint */
+        /* Change to sticky for larger screens to allow scrolling with content */
         .sidebar-wrapper {
-            position: static;
+            position: sticky;
+            top: 0; /* Sticks to the top of the viewport */
+            height: 100vh; /* Use viewport height to fill the screen vertically */
             transform: translateX(0);
         }
         .sidebar-overlay {
@@ -98,14 +101,14 @@
         </div>
 
         <div id="app-content" class="hidden min-h-screen flex flex-col">
-            <header class="bg-white shadow-md flex-shrink-0 z-30">
+            <header class="bg-white shadow-md flex-shrink-0 z-30 hidden"> 
                 <div class="px-4 sm:px-6 lg:px-8">
                     <div class="flex items-center justify-between h-20">
                         <div class="flex items-center">
                             <button id="menu-button" class="lg:hidden p-2 -ml-2 mr-3 text-gray-500 hover:text-gray-900">
                                 <i data-lucide="menu" class="w-6 h-6"></i>
                             </button>
-                            <img src="https://www.dropbox.com/scl/fi/likr2k1anulu772755g7z/Untitled-Kasam-Sales-Insights-2.png?rlkey=prducnpxfwdit2jwpy292lygv&st=m5lthzcx&raw=1" alt="Kasam Sales Insights Logo" class="h-16 w-auto object-contain">
+                            <img src="https://www.dropbox.com/scl/fi/qovbx5eogzklebun582ln/Sales.png?rlkey=x6pp38je3j7eclrrspl6xh3l7&st=f1ayft52&raw=1" alt="Kasam Sales Insights Logo" class="h-16 w-auto object-contain">
                             <h1 class="hidden sm:block text-xl font-extrabold text-gray-800 ml-4">Kasam Fashions Private Limited</h1>
                         </div>
                     </div>
@@ -113,7 +116,7 @@
             </header>
 
             <div class="flex flex-1">
-                <div id="sidebar-wrapper" class="sidebar-wrapper w-56 bg-white border-r border-gray-200 p-4 z-40 h-full">
+                <div id="sidebar-wrapper" class="sidebar-wrapper w-56 bg-white border-r border-gray-200 p-4 z-40 flex-shrink-0">
                     <aside class="flex flex-col h-full">
                         <div class="flex items-center justify-between lg:hidden mb-4">
                             <span class="font-bold text-lg">Menu</span>
@@ -130,7 +133,7 @@
                 
                 <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto flex flex-col">
                     <div id="page-home" class="page-content flex-1 bg-white rounded-lg shadow flex flex-col items-center justify-center p-6 sm:p-12">
-                        <img src="https://www.dropbox.com/scl/fi/likr2k1anulu772755g7z/Untitled-Kasam-Sales-Insights-2.png?rlkey=prducnpxfwdit2jwpy292lygv&st=m5lthzcx&raw=1" alt="Kasam Sales Insights Logo" class="h-40 sm:h-60 w-auto mb-4 object-contain opacity-80" />
+                        <img src="https://www.dropbox.com/scl/fi/qovbx5eogzklebun582ln/Sales.png?rlkey=x6pp38je3j7eclrrspl6xh3l7&st=f1ayft52&raw=1" alt="Kasam Sales Insights Logo" class="h-40 sm:h-60 w-auto mb-4 object-contain opacity-100" />
                         <h2 class="text-2xl sm:text-4xl font-bold text-gray-800 mb-4 text-center">Welcome to Kasam Sales Insights</h2>
                         <p class="text-base sm:text-xl text-gray-600 max-w-2xl text-center">Use the navigation panel to view reports, track sales trends, and analyze payment differences of the stores.</p>
                     </div>
